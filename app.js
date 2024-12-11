@@ -1,10 +1,42 @@
+// Add the storage key as an app-wide constant
+const STORAGE_KEY = "treasure-quest";
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(showPosition, showError);
+            } else {
+                document.getElementById('location').innerHTML = 'Location not supported.';
+            }
+        }
+
+
+        function showPosition(position) {
+console.log(position);
+        /*
+            document.getElementById('location').innerHTML += 'Latitude: ' + position.coords.latitude + '<br />'
+                                                            + 'Longitude: ' + position.coords.longitude + '<br />'
+                                                            + 'Accuracy: ' + position.coords.accuracy + '<br />'
+                                                            + '';
+        */
+            if (position.coords.latitude > 43.5663) {
+                document.getElementById('location').innerHTML += 'Checkpoint';
+            }
+        }
+
+
+        function showError(error) {
+            if (error.PERMISSION_DENIED) {
+                document.getElementById("location").innerHTML = 'Location sharing denied.';
+            }
+        }
+
+        getLocation();
+
+/*
 const newPeriodFormEl = document.getElementsByTagName("form")[0];
 const startDateInputEl = document.getElementById("start-date");
 const endDateInputEl = document.getElementById("end-date");
 const pastPeriodContainer = document.getElementById("past-periods");
-
-// Add the storage key as an app-wide constant
-const STORAGE_KEY = "period-tracker";
 
 // Listen to form submissions.
 newPeriodFormEl.addEventListener("submit", (event) => {
@@ -71,3 +103,4 @@ function formatDate(dateString) {
 }
 
 renderPastPeriods();
+*/
