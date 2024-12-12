@@ -50,16 +50,22 @@ self.addEventListener('fetch', (e) => {
         return; 
     }
 
-  e.respondWith((async () => {
-    const r = await caches.match(e.request);
-    console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
-    if (r) return r;
-    const response = await fetch(e.request);
-    const cache = await caches.open(CACHE_NAME);
-    console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
-    cache.put(e.request, response.clone());
-    return response;
-  })());
+    e.respondWith((async () => {
+        const cache = await caches.open(CACHE_NAME);
+        const cachedResponse = await cache.match(e.request.url);
+
+        console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
+
+        // Return the cached response if it's available.
+        if (cachedResponse) return cachedResponse;
+
+        //No cache => try to fetch from network
+        console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
+        const response = await fetch(e.request);
+        cache.put(e.request.url, response.clone());
+
+        return response;
+    })());
 });
 /*
 // On fetch, intercept server requests
