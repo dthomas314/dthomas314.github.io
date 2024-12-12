@@ -11,7 +11,6 @@ const STORAGE_KEY = "treasure-quest";
 
 
         function showPosition(position) {
-console.log(position);
         /*
             document.getElementById('location').innerHTML += 'Latitude: ' + position.coords.latitude + '<br />'
                                                             + 'Longitude: ' + position.coords.longitude + '<br />'
