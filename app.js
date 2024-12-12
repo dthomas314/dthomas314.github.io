@@ -11,15 +11,15 @@ const STORAGE_KEY = "treasure-quest";
 
 
         function showPosition(position) {
-        /*
-            document.getElementById('location').innerHTML += 'Latitude: ' + position.coords.latitude + '<br />'
+        
+            document.getElementById('location').innerHTML = 'Latitude: ' + position.coords.latitude + '<br />'
                                                             + 'Longitude: ' + position.coords.longitude + '<br />'
                                                             + 'Accuracy: ' + position.coords.accuracy + '<br />'
                                                             + '';
-        */
+        /*
             if (position.coords.latitude > 43.5663) {
                 document.getElementById('location').innerHTML += 'Checkpoint';
-            }
+            }*/
         }
 
 
