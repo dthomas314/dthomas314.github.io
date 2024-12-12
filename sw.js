@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "1.0";
+const VERSION = "1.1";
 
 // The name of the cache
 const CACHE_NAME = `period-tracker-${VERSION}`;
