@@ -40,7 +40,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-
+/*
 // Fetching content using Service Worker
 self.addEventListener('fetch', (e) => {
     // Cache http and https only, skip unsupported chrome-extension:// and file://...
@@ -60,7 +60,7 @@ self.addEventListener('fetch', (e) => {
     cache.put(e.request, response.clone());
     return response;
   })());
-});
+});*/
 /*
 // On fetch, intercept server requests
 // and respond with cached responses instead of going to network
