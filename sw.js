@@ -43,6 +43,7 @@ self.addEventListener("activate", (event) => {
 
 // Fetching content using Service Worker
 self.addEventListener('fetch', (e) => {
+    console.log('fetch');
     // Cache http and https only, skip unsupported chrome-extension:// and file://...
     if (!(
        e.request.url.startsWith('http:') || e.request.url.startsWith('https:')
