@@ -2,7 +2,7 @@
 const VERSION = "1.1";
 
 // The name of the cache
-const CACHE_NAME = `period-tracker-${VERSION}`;
+const CACHE_NAME = `treasure-quest-${VERSION}`;
 
 // The static resources that the app needs to function.
 const APP_STATIC_RESOURCES = [
