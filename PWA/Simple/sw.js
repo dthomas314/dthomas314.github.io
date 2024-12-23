@@ -2,15 +2,15 @@
 const VERSION = "v1";
 
 // The name of the cache
-const CACHE_NAME = `period-tracker-${VERSION}`;
+const CACHE_NAME = `simple-pwa-${VERSION}`;
 
 // The static resources that the app needs to function.
 const APP_STATIC_RESOURCES = [
   "/",
-  "/index.html",
-  "/app.js",
-  "/style.css",
-  "/icons/wheel.svg",
+  "/PWA/Simple/index.html",
+  "/PWA/Simple/app.js",
+  "/PWA/Simple/style.css",
+  "/PWA/Simple/icons/wheel.svg",
 ];
 
 // On install, cache the static resources
@@ -45,7 +45,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   // As a single page app, direct app to always go to cached home page.
   if (event.request.mode === "navigate") {
-    event.respondWith(caches.match("/"));
+    event.respondWith(caches.match("/PWA/Simple/"));
     return;
   }
 

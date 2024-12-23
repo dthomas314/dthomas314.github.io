@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Treasure Quest</title>
+    <title>Simple PWA Demo</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" href="icons/circle.svg" />
@@ -23,14 +23,14 @@
     </script>
   </head>
   <body>
-    <h1>Treasure Quest</h1>
-    <div id="step1">
-	Go to the Tot Lot
+    <h1>Simple PWA Demo</h1>
+    <div>
+      This is a simple demo of a basic Progressive Web Application.
     </div>
-    <div id="step2">
+    <div>
     <form>
       <fieldset>
-        <legend>Confirm your code</legend>
+        <legend>Form element example</legend>
         <p>
           <label for="name-input">Name</label>
           <input type="text" id="name-input" required />
@@ -44,8 +44,12 @@
         <button type="submit">Submit Code</button>
       </p>
     </form>
+    <h2>TODO: Update to demo saving form values and displaying</h2>
     </div>
-    <div id="location">Getting location...</div>
+    <div style="margin-top:80px;">
+      Test of getting user location:
+      <div id="location">Getting location...</div>
+    </div>    
     <script src="app.js" defer></script>
   </body>
 </html>

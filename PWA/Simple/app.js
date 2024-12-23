@@ -1,35 +1,30 @@
 // Add the storage key as an app-wide constant
-const STORAGE_KEY = "treasure-quest";
+const STORAGE_KEY = "simple-pwa";
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition(showPosition, showError);
-            } else {
-                document.getElementById('location').innerHTML = 'Location not supported.';
-            }
-        }
-
-
-        function showPosition(position) {
-        /*
-            document.getElementById('location').innerHTML += 'Latitude: ' + position.coords.latitude + '<br />'
-                                                            + 'Longitude: ' + position.coords.longitude + '<br />'
-                                                            + 'Accuracy: ' + position.coords.accuracy + '<br />'
-                                                            + '';
-        */
-            if (position.coords.latitude > 43.5663) {
-                document.getElementById('location').innerHTML += 'Checkpoint';
-            }
-        }
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(showPosition, showError);
+    } else {
+        document.getElementById('location').innerHTML = 'Location not supported.';
+    }
+}
 
 
-        function showError(error) {
-            if (error.PERMISSION_DENIED) {
-                document.getElementById("location").innerHTML = 'Location sharing denied.';
-            }
-        }
+function showPosition(position) {
+    document.getElementById('location').innerHTML = 'Latitude: ' + position.coords.latitude + '<br />'
+                                                    + 'Longitude: ' + position.coords.longitude + '<br />'
+                                                    + 'Accuracy: ' + position.coords.accuracy + '<br />'
+                                                    + '';
+}
 
-        getLocation();
+
+function showError(error) {
+    if (error.PERMISSION_DENIED) {
+        document.getElementById("location").innerHTML = 'Location sharing denied.';
+    }
+}
+
+getLocation();
 
 /*
 const newPeriodFormEl = document.getElementsByTagName("form")[0];
