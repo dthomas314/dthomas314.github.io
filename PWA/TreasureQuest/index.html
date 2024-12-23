@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Treasure Quest</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icons/circle.svg" />
+    <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").then(
+        (registration) => {
+          console.log("Service worker registration successful:", registration);
+        },
+        (error) => {
+          console.error(`Service worker registration failed: ${error}`);
+        },
+      );
+    } else {
+      console.error("Service workers are not supported.");
+    }
+    </script>
+  </head>
+  <body>
+    <h1>Treasure Quest</h1>
+    <div id="step1" class="questStep">
+	Go to the Tot Lot
+    </div>
+    <div id="step2" class="questStep">
+    <form>
+      <fieldset>
+        <legend>Confirm your code</legend>
+        <p>
+          <label for="name-input">Name</label>
+          <input type="text" id="name-input" required />
+        </p>
+        <p>
+          <label for="code-input">Code</label>
+          <input type="text" id="code-input" required />
+        </p>
+      </fieldset>
+      <p>
+        <button type="submit">Submit Code</button>
+      </p>
+    </form>
+    </div>
+    <div id="location">Getting location...</div>
+    <script src="app.js" defer></script>
+  </body>
+</html>
