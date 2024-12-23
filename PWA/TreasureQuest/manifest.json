@@ -2,7 +2,7 @@
   "name": "Treasure Quest",
   "short_name": "Quest",
   "description": "Your quest for treasure starts here",
-  "start_url": "/",
+  "start_url": "/PWA/TreasureQuest/",
   "theme_color": "#eeffee",
   "background_color": "#eeffee",
   "display": "standalone",
