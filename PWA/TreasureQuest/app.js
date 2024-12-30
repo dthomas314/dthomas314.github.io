@@ -1,7 +1,74 @@
-// Add the storage key as an app-wide constant
 const STORAGE_KEY = "treasure-quest";
 const IS_CLOSE_METERS = 20;
 const DEGREES_PER_METER = 0.000009;
+let gIsTest = false;
+let gStepCount = 0;
+let gCurrentStep = 1;
+
+
+function setupQuest() {  
+  if(document.location.href.indexOf('?test=1') > 0)
+    gIsTest = true;
+
+  //Setup current state
+  restoreQuestState();
+  
+  //Add steps
+  let questSteps = document.querySelector('#questSteps');
+  addStep(questSteps);
+  addStep(questSteps);
+}
+
+
+
+function addStep(questSteps) {
+  let newStep = document.createElement('div');
+  let stepNumber = gStepCount + 1;
+
+  newStep.id = 'questStep' + stepNumber;
+  newStep.classList.add('questStep');
+  if(stepNumber === gCurrentStep)
+    newStep.classList.add('questStepActive');
+  newStep.innerText = 'Go to the Tot Lot' + ' - Step ' + stepNumber;
+
+  if(gIsTest) {
+    let testButton = document.createElement('a');
+    testButton.href = 'javascript:';
+    testButton.addEventListener('click', function() {
+      goNextStep();
+    });
+    testButton.innerText = "Next Step";
+    testButton.classList.add('testButton');
+    newStep.appendChild(testButton);
+  }
+
+  questSteps.appendChild(newStep);
+  gStepCount++;
+}
+
+
+
+function goNextStep() {
+  document.querySelector('#questStep' + gCurrentStep).classList.remove('questStepActive');
+
+  gCurrentStep++;
+  saveQuestState();
+
+  document.querySelector('#questStep' + gCurrentStep).classList.add('questStepActive');
+}
+
+
+
+function resetQuest() {
+  document.querySelector('#questStep' + gCurrentStep).classList.remove('questStepActive');
+
+  gCurrentStep = 1;
+  saveQuestState();
+
+  document.querySelector('#questStep' + gCurrentStep).classList.add('questStepActive');
+}
+
+
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -10,6 +77,7 @@ function getLocation() {
         document.getElementById('location').innerHTML = 'Location not supported.';
     }
 }
+
 
 
 function showPosition(position) {
@@ -40,11 +108,13 @@ function showPosition(position) {
 }
 
 
+
 function showError(error) {
     if (error.PERMISSION_DENIED) {
         document.getElementById("location").innerHTML = 'Location sharing denied.';
     }
 }
+
 
 
 function isClose(checkPosition, goalPosition) {
@@ -61,12 +131,33 @@ function isClose(checkPosition, goalPosition) {
 }
 
 
+
 function isCloseEstimate(checkPosition, goalPosition) {
   return Math.abs(checkPosition.coords.latitude - goalPosition.coords.latitude) < IS_CLOSE_METERS * DEGREES_PER_METER
     && Math.abs(checkPosition.coords.longitude - goalPosition.coords.longitude) < IS_CLOSE_METERS * DEGREES_PER_METER
 }
 
-getLocation();
+
+
+function saveQuestState() {
+  const questState = {step: gCurrentStep};
+
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(questState));
+}
+
+
+
+function restoreQuestState() {
+  const data = window.localStorage.getItem(STORAGE_KEY);
+  const questState = data ? JSON.parse(data) : {step: 1};
+
+  gCurrentStep = questState.step;
+}
+
+
+
+//getLocation();
+setupQuest();
 
 /*
 const newPeriodFormEl = document.getElementsByTagName("form")[0];
