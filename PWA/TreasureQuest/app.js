@@ -46,12 +46,54 @@ function addStep(questSteps, stepData) {
   let newStep = document.createElement('div');
   let stepNumber = gStepCount + 1;
 
+  //Overall holder for step
   newStep.id = 'questStep' + stepNumber;
   newStep.classList.add('questStep');
   if(stepNumber === gCurrentStep)
     newStep.classList.add('questStepActive');
+
+  //Display text
   newStep.innerText = stepData.directions;
 
+  
+  //Determine input controls based on type of step
+  switch(stepData.type) {
+    case 'message':
+      let nextButton = document.createElement('a');
+      nextButton.href = 'javascript:';
+      nextButton.addEventListener('click', function() {
+        goNextStep();
+      });
+      nextButton.innerText = stepData.button;
+      nextButton.classList.add('btn');
+      nextButton.classList.add('btn-primary');
+      newStep.appendChild(nextButton);      
+      break;
+    case 'question':
+      let stepInput = document.createElement('input');
+      stepInput.type = 'text'
+      stepInput.id = 'step' + gStepCount + 'Answer';
+      stepInput.classList.add('form-control');
+      newStep.appendChild(stepInput);   
+
+      let submitButton = document.createElement('a');
+      submitButton.href = 'javascript:';
+      submitButton.addEventListener('click', function() {
+        if(stepInput.value == stepData.answer) {
+          goNextStep();
+        } else {
+          alert('Sorry, that isn\'t the right answer.');
+        }
+      });
+      submitButton.innerText = stepData.button;
+      submitButton.classList.add('btn');
+      submitButton.classList.add('btn-primary');
+      newStep.appendChild(submitButton);      
+      break;
+  }
+
+
+  //Add a skip button if in test mode
   if(gIsTest) {
     let testButton = document.createElement('a');
     testButton.href = 'javascript:';
@@ -66,6 +108,7 @@ function addStep(questSteps, stepData) {
     newStep.appendChild(testButton);
   }
 
+  //Add step to DOM
   questSteps.appendChild(newStep);
   gStepCount++;
 }

@@ -1,12 +1,20 @@
 {
     "steps":[
         {
-            "type": "location",
-            "directions": "Go to the Tot Lot"
+            "type": "message",
+            "directions": "Are you ready to start your quest?",
+            "button": "START"
         },
         {
             "type": "question",
-            "directions": "what color is the sky?"
+            "directions": "what color is the sky?",
+            "input": "text",
+            "button": "Check",
+            "answer": "blue"
+        },
+        {
+            "type": "location",
+            "directions": "Go to the Tot Lot"
         }
     ]
 }
