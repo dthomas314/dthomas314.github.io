@@ -1,0 +1,12 @@
+{
+    "steps":[
+        {
+            "type": "location",
+            "directions": "Go to the Tot Lot"
+        },
+        {
+            "type": "question",
+            "directions": "what color is the sky?"
+        }
+    ]
+}

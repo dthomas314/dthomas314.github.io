@@ -11,6 +11,7 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/app.js",
   "/PWA/TreasureQuest/style.css",
   "/PWA/TreasureQuest/icons/wheel.svg",
+  "/PWA/TreasureQuest/quests/test.json",
 ];
 
 // On install, cache the static resources
