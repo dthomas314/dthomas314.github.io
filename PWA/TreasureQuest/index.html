@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>Treasure Quest</title>
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css?v=2024.12.30.1324" />
     <link rel="manifest" href="manifest.json?v=2024.12.23.1213" />
     <link rel="icon" href="icons/circle.svg" />
@@ -26,27 +27,7 @@
     <h1>Treasure Quest</h1>
     <a href="javascript:" onclick="resetQuest();">Start Over</a><br /><br />
     <div id="questSteps"></div>
-    <div id="step1" class="questStep">
-	Go to the Tot Lot
-    </div>
-    <div id="step2" class="questStep">
-    <form>
-      <fieldset>
-        <legend>Confirm your code</legend>
-        <p>
-          <label for="name-input">Name</label>
-          <input type="text" id="name-input" required />
-        </p>
-        <p>
-          <label for="code-input">Code</label>
-          <input type="text" id="code-input" required />
-        </p>
-      </fieldset>
-      <p>
-        <button type="submit">Submit Code</button>
-      </p>
-    </form>
-    </div>
     <script src="app.js?v=2024.12.23.1213" defer></script>
+    <script src="bootstrap/bootstrap.bundle.min.js"></script>
   </body>
 </html>
