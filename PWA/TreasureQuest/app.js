@@ -58,8 +58,11 @@ function addStep(questSteps, stepData) {
     testButton.addEventListener('click', function() {
       goNextStep();
     });
-    testButton.innerText = "Next Step";
+    testButton.innerText = "TEST: Skip to Next Step";
     testButton.classList.add('testButton');
+    testButton.classList.add('btn');
+    testButton.classList.add('btn-warning');
+    
     newStep.appendChild(testButton);
   }
 
