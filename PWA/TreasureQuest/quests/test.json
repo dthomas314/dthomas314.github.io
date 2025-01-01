@@ -14,7 +14,9 @@
         },
         {
             "type": "location",
-            "directions": "Go to the Tot Lot"
+            "directions": "Go to the Tot Lot",
+            "destination": {"coords": {"latitude":43.566439, "longitude":-116.140272}, "proximityMeters": 20},
+            "button": "Proceed"
         }
     ]
 }

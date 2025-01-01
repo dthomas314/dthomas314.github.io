@@ -1,6 +1,4 @@
 const STORAGE_KEY = "treasure-quest";
-const IS_CLOSE_METERS = 20;
-const DEGREES_PER_METER = 0.000009;
 let gIsTest = false;
 let gQuest = {};
 let gCurrentStep = 0;
@@ -94,7 +92,59 @@ function drawCurrentStep() {
         stepElement.appendChild(submitButton);      
         break;
       case 'location':
+        let watchID = null;
 
+        //Block for displaying location errors
+        let locationError = document.createElement('div');
+        locationError.classList.add('error');
+        locationError.style.display = 'none';
+        stepElement.appendChild(locationError);
+
+        //Block for displaying success
+        let arrived = document.createElement('div');
+        arrived.innerText = 'You\'re there!';
+        let doneButton = document.createElement('a');
+        doneButton.href = 'javascript:';
+        doneButton.addEventListener('click', function() {
+          navigator.geolocation.clearWatch(watchID);
+          watchID = null;
+          goNextStep();
+        });
+        doneButton.innerText = currentStep.button;
+        doneButton.classList.add('btn');
+        doneButton.classList.add('btn-primary');
+        arrived.appendChild(doneButton);
+        stepElement.appendChild(arrived);         
+
+        if (navigator.geolocation) {
+          watchID = navigator.geolocation.watchPosition((position) => {
+            /*
+            locationError.innerHTML = 'Latitude: ' + position.coords.latitude + '<br />'
+            + 'Longitude: ' + position.coords.longitude + '<br />'
+            + 'Accuracy: ' + position.coords.accuracy + '<br />'
+            + '';
+            locationError.style.display = 'block';
+            */
+
+            locationError.style.display = 'none';
+            //if (isCloseEstimate(position, currentStep.destination)) {
+            if (isCloseEstimate(position, currentStep.destination)) {
+              arrived.style.display = 'block';
+            } else {
+              arrived.style.display = 'none';
+            }           
+          },
+          //error
+          (error) => {
+            if (error.PERMISSION_DENIED) {
+              locationError.innerText = 'Location is required to complete quest.';
+              locationError.style.display = 'block';
+          }
+          });
+        } else {
+          locationError.innerText = 'Your device does not support location sharing, which is required to complete quest.';
+          locationError.style.display = 'block';
+        }
         break;
     }
 
@@ -136,71 +186,27 @@ function resetQuest() {
 
 
 
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.watchPosition(showPosition, showError);
-    } else {
-        document.getElementById('location').innerHTML = 'Location not supported.';
-    }
-}
 
-
-
-function showPosition(position) {
-    /*
-    let locationElement = document.createElement('div');
-    locationElement.innerHTML = 'Latitude: ' + position.coords.latitude + '<br />'
-                                                    + 'Longitude: ' + position.coords.longitude + '<br />'
-                                                    + 'Accuracy: ' + position.coords.accuracy + '<br />'
-                                                    + '';
-    */
-
-    //Goal:  43.566439, -116.140272
-    //Test: 43.566428, -116.140091
-    const goalPosition = {coords:{latitude:43.566439, longitude:-116.140272}};
-
-    locationElement.innerHTML = '';
-    if (isCloseEstimate(position, goalPosition)) {
-      locationElement.innerHTML += 'Estimate: Close<br />';
-    } else {
-      locationElement.innerHTML += 'Estimate: Far<br />';
-    }
-
-    if (isClose(position, goalPosition)) {
-      locationElement.innerHTML += 'Accurate: Close<br />';
-    } else {
-      locationElement.innerHTML += 'Accurate: Far<br />';
-    }
-}
-
-
-
-function showError(error) {
-    if (error.PERMISSION_DENIED) {
-        document.getElementById("location").innerHTML = 'Location sharing denied.';
-    }
-}
-
-
-
-function isClose(checkPosition, goalPosition) {
+function isClose(checkPosition, destination) {
   let R = 6378.137; // Radius of earth in KM
-  let dLat = goalPosition.coords.latitude * Math.PI / 180 - checkPosition.coords.latitude * Math.PI / 180;
-  let dLon = goalPosition.coords.longitude * Math.PI / 180 - checkPosition.coords.longitude * Math.PI / 180;
+  let dLat = destination.coords.latitude * Math.PI / 180 - checkPosition.coords.latitude * Math.PI / 180;
+  let dLon = destination.coords.longitude * Math.PI / 180 - checkPosition.coords.longitude * Math.PI / 180;
   let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.cos(checkPosition.coords.latitude * Math.PI / 180) * Math.cos(goalPosition.coords.latitude * Math.PI / 180) *
+          Math.cos(checkPosition.coords.latitude * Math.PI / 180) * Math.cos(destination.coords.latitude * Math.PI / 180) *
           Math.sin(dLon/2) * Math.sin(dLon/2);
   let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   let d = R * c * 1000; // Meters
 
-  return (d < IS_CLOSE_METERS);
+  return (d < destination.proximityMeters);
 }
 
 
 
-function isCloseEstimate(checkPosition, goalPosition) {
-  return Math.abs(checkPosition.coords.latitude - goalPosition.coords.latitude) < IS_CLOSE_METERS * DEGREES_PER_METER
-    && Math.abs(checkPosition.coords.longitude - goalPosition.coords.longitude) < IS_CLOSE_METERS * DEGREES_PER_METER
+function isCloseEstimate(checkPosition, destination) {
+  const DEGREES_PER_METER = 0.000009;
+
+  return Math.abs(checkPosition.coords.latitude - destination.coords.latitude) < destination.proximityMeters * DEGREES_PER_METER
+    && Math.abs(checkPosition.coords.longitude - destination.coords.longitude) < destination.proximityMeters * DEGREES_PER_METER
 }
 
 
