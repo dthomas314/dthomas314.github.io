@@ -2,8 +2,8 @@ const STORAGE_KEY = "treasure-quest";
 const IS_CLOSE_METERS = 20;
 const DEGREES_PER_METER = 0.000009;
 let gIsTest = false;
-let gStepCount = 0;
-let gCurrentStep = 1;
+let gQuest = {};
+let gCurrentStep = 0;
 
 
 function setupQuest() {  
@@ -13,16 +13,13 @@ function setupQuest() {
   //Setup current state
   restoreQuestState();
 
-
-  //Add steps
-  addSteps();
+  //Load quest
+  loadQuest();
 }
 
 
 
-function addSteps() {
-  let questSteps = document.querySelector('#questSteps');
-
+function loadQuest() {
   fetch("quests/test.json")
   .then((res) => {
       if (!res.ok) {
@@ -31,10 +28,9 @@ function addSteps() {
       }
       return res.json();
   })
-  .then((data) => {    
-    for(let stepIndex = 0; stepIndex < data.steps.length; stepIndex++) {
-      addStep(questSteps, data.steps[stepIndex]);
-    }
+  .then((data) => {   
+    gQuest = data; 
+    drawCurrentStep();
   })
   .catch((error) =>
       console.error("Unable to fetch data:", error));
@@ -42,97 +38,100 @@ function addSteps() {
 
 
 
-function addStep(questSteps, stepData) {
-  let newStep = document.createElement('div');
-  let stepNumber = gStepCount + 1;
+function drawCurrentStep() {
+  let canvas = document.querySelector('#canvas');
+  canvas.innerHTML = '';
 
-  //Overall holder for step
-  newStep.id = 'questStep' + stepNumber;
-  newStep.classList.add('questStep');
-  if(stepNumber === gCurrentStep)
-    newStep.classList.add('questStepActive');
+  if(gCurrentStep < 0) {
+    gCurrentStep = 0;
+  }
 
-  //Display text
-  newStep.innerText = stepData.directions;
+  if(gCurrentStep >= gQuest.steps.length) { //Done
+    let stepElement = document.createElement('div');
+    stepElement.innerText = 'Congratulations, you completed your quest!';
+    canvas.appendChild(stepElement);
+  } else {  //Draw current step
+    let currentStep = gQuest.steps[gCurrentStep];
+    let stepElement = document.createElement('div');
 
-  
-  //Determine input controls based on type of step
-  switch(stepData.type) {
-    case 'message':
-      let nextButton = document.createElement('a');
-      nextButton.href = 'javascript:';
-      nextButton.addEventListener('click', function() {
+    //Overall holder for step
+    stepElement.classList.add('questStep');
+
+    //Display text
+    stepElement.innerText = currentStep.directions;
+
+    //Determine input controls based on type of step
+    switch(currentStep.type) {
+      case 'message':
+        let nextButton = document.createElement('a');
+        nextButton.href = 'javascript:';
+        nextButton.addEventListener('click', function() {
+          goNextStep();
+        });
+        nextButton.innerText = currentStep.button;
+        nextButton.classList.add('btn');
+        nextButton.classList.add('btn-primary');
+        stepElement.appendChild(nextButton);      
+        break;
+      case 'question':
+        let stepInput = document.createElement('input');
+        stepInput.type = 'text'
+        stepInput.classList.add('form-control');
+        stepElement.appendChild(stepInput);   
+
+        let submitButton = document.createElement('a');
+        submitButton.href = 'javascript:';
+        submitButton.addEventListener('click', function() {
+          if(stepInput.value == currentStep.answer) {
+            goNextStep();
+          } else {
+            alert('Sorry, that isn\'t the right answer.');
+          }
+        });
+        submitButton.innerText = currentStep.button;
+        submitButton.classList.add('btn');
+        submitButton.classList.add('btn-primary');
+        stepElement.appendChild(submitButton);      
+        break;
+      case 'location':
+
+        break;
+    }
+
+    //Add a skip button if in test mode
+    if(gIsTest) {
+      let testButton = document.createElement('a');
+      testButton.href = 'javascript:';
+      testButton.addEventListener('click', function() {
         goNextStep();
       });
-      nextButton.innerText = stepData.button;
-      nextButton.classList.add('btn');
-      nextButton.classList.add('btn-primary');
-      newStep.appendChild(nextButton);      
-      break;
-    case 'question':
-      let stepInput = document.createElement('input');
-      stepInput.type = 'text'
-      stepInput.id = 'step' + gStepCount + 'Answer';
-      stepInput.classList.add('form-control');
-      newStep.appendChild(stepInput);   
+      testButton.innerText = "TEST: Skip to Next Step";
+      testButton.classList.add('testButton');
+      testButton.classList.add('btn');
+      testButton.classList.add('btn-warning');
+      
+      stepElement.appendChild(testButton);
+    }
 
-      let submitButton = document.createElement('a');
-      submitButton.href = 'javascript:';
-      submitButton.addEventListener('click', function() {
-        if(stepInput.value == stepData.answer) {
-          goNextStep();
-        } else {
-          alert('Sorry, that isn\'t the right answer.');
-        }
-      });
-      submitButton.innerText = stepData.button;
-      submitButton.classList.add('btn');
-      submitButton.classList.add('btn-primary');
-      newStep.appendChild(submitButton);      
-      break;
-  }
-
-
-  //Add a skip button if in test mode
-  if(gIsTest) {
-    let testButton = document.createElement('a');
-    testButton.href = 'javascript:';
-    testButton.addEventListener('click', function() {
-      goNextStep();
-    });
-    testButton.innerText = "TEST: Skip to Next Step";
-    testButton.classList.add('testButton');
-    testButton.classList.add('btn');
-    testButton.classList.add('btn-warning');
-    
-    newStep.appendChild(testButton);
-  }
-
-  //Add step to DOM
-  questSteps.appendChild(newStep);
-  gStepCount++;
+    //Add step to DOM
+    canvas.appendChild(stepElement);
+  }        
 }
 
 
 
 function goNextStep() {
-  document.querySelector('#questStep' + gCurrentStep).classList.remove('questStepActive');
-
   gCurrentStep++;
   saveQuestState();
-
-  document.querySelector('#questStep' + gCurrentStep).classList.add('questStepActive');
+  drawCurrentStep();
 }
 
 
 
 function resetQuest() {
-  document.querySelector('#questStep' + gCurrentStep).classList.remove('questStepActive');
-
-  gCurrentStep = 1;
+  gCurrentStep = 0;
   saveQuestState();
-
-  document.querySelector('#questStep' + gCurrentStep).classList.add('questStepActive');
+  drawCurrentStep();
 }
 
 
@@ -216,7 +215,7 @@ function saveQuestState() {
 
 function restoreQuestState() {
   const data = window.localStorage.getItem(STORAGE_KEY);
-  const questState = data ? JSON.parse(data) : {step: 1};
+  const questState = data ? JSON.parse(data) : {step: 0};
 
   gCurrentStep = questState.step;
 }

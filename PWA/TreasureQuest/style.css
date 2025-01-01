@@ -21,7 +21,6 @@ legend {
 li:nth-of-type(even) {
   background-color: inherit;
 }
-.questStep {margin:20px;border:1px solid black;background-color:white;display:none;}
-.questStepActive {display:block !important;}
+.questStep {margin:20px;border:1px solid black;background-color:white;}
 
 .testButton{display:block;margin:10px;}
