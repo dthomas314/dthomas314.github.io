@@ -1,4 +1,6 @@
 const STORAGE_KEY = "treasure-quest";
+const SUCCESS_SOUND = new Audio('assets/success.mp3');
+const FAILURE_SOUND = new Audio('assets/failure.mp3');
 let gIsTest = false;
 let gQuest = {};
 let gCurrentStep = 0;
@@ -84,8 +86,10 @@ function drawCurrentStep() {
         submitButton.href = 'javascript:';
         submitButton.addEventListener('click', function() {
           if(stepInput.value == currentStep.answer) {
+            SUCCESS_SOUND.play();
             goNextStep();
           } else {
+            FAILURE_SOUND.play();
             alert('Sorry, that isn\'t the right answer.');
           }
         });
@@ -133,6 +137,8 @@ function drawCurrentStep() {
             locationError.style.display = 'none';
             //if (isCloseEstimate(position, currentStep.destination)) {
             if (isCloseEstimate(position, currentStep.destination)) {
+              if(arrived.style.display !== 'block') SUCCESS_SOUND.play();
+
               arrived.style.display = 'block';
             } else {
               arrived.style.display = 'none';
