@@ -19,7 +19,8 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/assets/failure.mp3",
   "/PWA/TreasureQuest/assets/map-sketch.mp3",
   "/PWA/TreasureQuest/assets/success.mp3",
-  "/PWA/TreasureQuest/assets/video1.mp4"
+  "/PWA/TreasureQuest/assets/video1.mp4",
+  "/PWA/TreasureQuest/assets/audio1.mp3"
 ];
 
 // On install, cache the static resources

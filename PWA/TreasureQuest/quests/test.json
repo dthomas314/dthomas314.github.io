@@ -26,6 +26,13 @@
         {
             "type": "location",
             "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/video1.mp4\">Your browser does not support videos</video>",
+            "destination": {"coords": {"latitude":43.56589, "longitude":-116.13950}, "proximityMeters": 20},
+            "button": "OK"
+        },
+        {
+            "type": "location",
+            "directions": "<audio controls><source src=\"assets/audio1.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
+            "destination": {"coords": {"latitude":43.56516, "longitude":-116.13996}, "proximityMeters": 20},
             "button": "OK"
         }
     ]
