@@ -26,7 +26,17 @@
   <body>
     <h1>Treasure Quest</h1>
     <div id="canvas"></div>
-    <div><a href="javascript:" onclick="resetQuest();" class="btn btn-primary">Start Over</a></div>
+    <nav class="navbar fixed-bottom navbar-expand navbar-dark bg-dark">
+      <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav">
+                  <li class="nav-item">
+                      <a class="btn btn-primary" href="javascript:" onclick="resetQuest();">Start Over</a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+    </nav>    
     <script src="app.js?v=2025.01.01.0930" defer></script>
     <script src="bootstrap/bootstrap.bundle.min.js"></script>
   </body>
