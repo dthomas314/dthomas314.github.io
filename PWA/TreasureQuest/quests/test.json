@@ -22,6 +22,11 @@
             "directions": "Go to the Tot Lot",
             "destination": {"coords": {"latitude":43.566439, "longitude":-116.140272}, "proximityMeters": 20},
             "button": "Proceed"
+        },
+        {
+            "type": "location",
+            "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/video1.mp4\">Your browser does not support videos</video>",
+            "button": "OK"
         }
     ]
 }
