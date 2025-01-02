@@ -46,7 +46,7 @@ function drawCurrentStep() {
 
   if(gCurrentStep >= gQuest.steps.length) { //Done
     let stepElement = document.createElement('div');
-    stepElement.innerText = 'Congratulations, you completed your quest!';
+    stepElement.innerHTML = '<h2>Congratulations, you completed your quest!</h2>';
     canvas.appendChild(stepElement);
   } else {  //Draw current step
     let currentStep = gQuest.steps[gCurrentStep];
@@ -56,7 +56,7 @@ function drawCurrentStep() {
     stepElement.classList.add('questStep');
 
     //Display text
-    stepElement.innerText = currentStep.directions;
+    stepElement.innerHTML = currentStep.directions;
 
     //Determine input controls based on type of step
     switch(currentStep.type) {
@@ -228,5 +228,4 @@ function restoreQuestState() {
 
 
 
-//getLocation();
 setupQuest();
