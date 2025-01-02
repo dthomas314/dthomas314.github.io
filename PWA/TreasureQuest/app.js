@@ -56,7 +56,10 @@ function drawCurrentStep() {
     stepElement.classList.add('questStep');
 
     //Display text
-    stepElement.innerHTML = currentStep.directions;
+    let directions = document.createElement('div');
+    directions.classList.add('directions');
+    directions.innerHTML = currentStep.directions;
+    stepElement.appendChild(directions);
 
     //Determine input controls based on type of step
     switch(currentStep.type) {
@@ -102,6 +105,7 @@ function drawCurrentStep() {
 
         //Block for displaying success
         let arrived = document.createElement('div');
+        arrived.style.display = 'none';
         arrived.innerText = 'You\'re there!';
         let doneButton = document.createElement('a');
         doneButton.href = 'javascript:';

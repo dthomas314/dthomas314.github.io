@@ -3,8 +3,9 @@ body {
   background-color: #efe;
 }
 
-.questStep {margin:20px;border:1px solid black;background-color:white;}
+.questStep {margin:20px;padding:20px;border:1px solid black;background-color:white;}
 
+.directions {margin:0px 0px 20px 0px;}
 .error {color:red;}
 
-.testButton{display:block;margin:10px;}
+.testButton{display:block;margin-top:10px;}
