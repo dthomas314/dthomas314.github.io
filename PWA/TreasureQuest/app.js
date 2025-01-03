@@ -1,19 +1,21 @@
+const TEST_MODE = true;
+const DEBUG_AREA = document.querySelector('#debug');
 const STORAGE_KEY = "treasure-quest";
 const SUCCESS_SOUND = new Audio('assets/success.mp3');
 const FAILURE_SOUND = new Audio('assets/failure.mp3');
-let gIsTest = true;
+
 let gQuest = {};
 let gCurrentStep = 0;
 
 
 function setupQuest() {  
-  if(document.location.href.indexOf('?test=1') > 0)
-    gIsTest = true;
+  if(TEST_MODE)
+    DEBUG_AREA.style.display = 'block';
 
   //Setup current state
   restoreQuestState();
 
-  //Load quest
+  //Load quest  
   loadQuest();
 }
 
@@ -126,6 +128,9 @@ function drawCurrentStep() {
 
         if (navigator.geolocation) {
           watchID = navigator.geolocation.watchPosition((position) => {
+            DEBUG_AREA.innerHTML = 'Goal: {lat:' + currentStep.destination.coords.latitude + ', lon: ' + currentStep.destination.coords.longitude + ', prox: ' + currentStep.destination.proximityMeters + '}<br />' +
+                          'Current: {lat:' + position.coords.latitude + ', lon: ' + position.coords.longitude + ', acc: ' + position.coords.accuracy + '}<br />' +
+                          '(' + Date.now() + ')';
             /*
             locationError.innerHTML = 'Latitude: ' + position.coords.latitude + '<br />'
             + 'Longitude: ' + position.coords.longitude + '<br />'
@@ -159,7 +164,7 @@ function drawCurrentStep() {
     }
 
     //Add a skip button if in test mode
-    if(gIsTest) {
+    if(TEST_MODE) {
       let testButton = document.createElement('a');
       testButton.href = 'javascript:';
       testButton.addEventListener('click', function() {
