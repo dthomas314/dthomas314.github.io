@@ -131,13 +131,6 @@ function drawCurrentStep() {
             DEBUG_AREA.innerHTML = 'Goal: {lat:' + currentStep.destination.coords.latitude + ', lon: ' + currentStep.destination.coords.longitude + ', prox: ' + currentStep.destination.proximityMeters + '}<br />' +
                           'Current: {lat:' + position.coords.latitude + ', lon: ' + position.coords.longitude + ', acc: ' + position.coords.accuracy + '}<br />' +
                           '(' + Date.now() + ')';
-            /*
-            locationError.innerHTML = 'Latitude: ' + position.coords.latitude + '<br />'
-            + 'Longitude: ' + position.coords.longitude + '<br />'
-            + 'Accuracy: ' + position.coords.accuracy + '<br />'
-            + '';
-            locationError.style.display = 'block';
-            */
 
             locationError.style.display = 'none';
             //if (isCloseEstimate(position, currentStep.destination)) {
