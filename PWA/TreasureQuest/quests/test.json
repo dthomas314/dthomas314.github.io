@@ -2,7 +2,7 @@
     "steps":[
         {
             "type": "message",
-            "directions": "Are you ready to start your quest?",
+            "directions": "NEWAre you ready to start your quest?",
             "button": "START"
         },
         {
