@@ -6,6 +6,7 @@
   "theme_color": "#eeffee",
   "background_color": "#eeffee",
   "display": "standalone",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "favicon.ico",

@@ -1,7 +1,7 @@
 const STORAGE_KEY = "treasure-quest";
 const SUCCESS_SOUND = new Audio('assets/success.mp3');
 const FAILURE_SOUND = new Audio('assets/failure.mp3');
-let gIsTest = false;
+let gIsTest = true;
 let gQuest = {};
 let gCurrentStep = 0;
 
