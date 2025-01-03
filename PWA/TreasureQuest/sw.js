@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "1.4";
+const VERSION = "1.5.1";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;

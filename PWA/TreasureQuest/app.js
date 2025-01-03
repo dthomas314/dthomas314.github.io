@@ -127,6 +127,7 @@ function drawCurrentStep() {
         stepElement.appendChild(arrived);         
 
         if (navigator.geolocation) {
+          const options = {enableHighAccuracy: true,timeout: 5000,maximumAge: 0,desiredAccuracy: 0, frequency: 500 };
           watchID = navigator.geolocation.watchPosition((position) => {
             DEBUG_AREA.innerHTML = 'Goal: {lat:' + currentStep.destination.coords.latitude + ', lon: ' + currentStep.destination.coords.longitude + ', prox: ' + currentStep.destination.proximityMeters + '}<br />' +
                           'Current: {lat:' + position.coords.latitude + ', lon: ' + position.coords.longitude + ', acc: ' + position.coords.accuracy + '}<br />' +
@@ -147,8 +148,9 @@ function drawCurrentStep() {
             if (error.PERMISSION_DENIED) {
               locationError.innerText = 'Location is required to complete quest.';
               locationError.style.display = 'block';
-          }
-          });
+            }
+          },
+          options);
         } else {
           locationError.innerText = 'Your device does not support location sharing, which is required to complete quest.';
           locationError.style.display = 'block';
