@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "1.5.2";
+const VERSION = "1.5.3";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -10,7 +10,7 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/index.html",
   "/PWA/TreasureQuest/app.js",
   "/PWA/TreasureQuest/style.css",
-  "/PWA/TreasureQuest/icons/wheel.svg",
+  "/PWA/TreasureQuest/icons/icon.svg",
   "/PWA/TreasureQuest/quests/test.json",
   "/PWA/TreasureQuest/bootstrap.min.css",
   "/PWA/TreasureQuest/bootstrap.min.css.map",
