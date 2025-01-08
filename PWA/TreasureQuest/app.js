@@ -6,6 +6,8 @@ const FAILURE_SOUND = new Audio('assets/failure.mp3');
 
 let gQuest = {};
 let gCurrentStep = 0;
+let gTimerInterval = null;
+let gTimerEnd = null;
 
 
 function setupQuest() {  
@@ -64,6 +66,32 @@ function drawCurrentStep() {
     directions.classList.add('directions');
     directions.innerHTML = currentStep.directions;
     stepElement.appendChild(directions);
+
+    //Check for countdown
+    if(currentStep.countdown) {
+      let timer = document.createElement('div');
+      timer.classList.add('timer');
+      stepElement.appendChild(timer);
+
+      gTimerEnd = new Date(new Date().getTime() + (currentStep.countdown.minutes * 60000) + (currentStep.countdown.seconds * 1000));
+      gTimerInterval = setInterval(() => {
+        let now = new Date().getTime();
+        let distance = gTimerEnd - now;
+        
+        if(distance <= 0) {
+          stopTimer();
+          alert('Sorry, time\'s up');
+          gCurrentStep = 0;
+          saveQuestState();
+          drawCurrentStep();          
+        } else {
+          let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          let seconds = '0' + Math.floor((distance % (1000 * 60)) / 1000);
+
+          timer.innerHTML = minutes + ':' + seconds.substring(seconds.length - 2);
+        }                
+      }, 1000);
+    }
 
     //Determine input controls based on type of step
     switch(currentStep.type) {
@@ -138,6 +166,8 @@ function drawCurrentStep() {
             if (isCloseEstimate(position, currentStep.destination)) {
               if(arrived.style.display !== 'block') SUCCESS_SOUND.play();
 
+              stopTimer();
+
               arrived.style.display = 'block';
             } else {
               arrived.style.display = 'none';
@@ -181,6 +211,7 @@ function drawCurrentStep() {
 
 
 function goNextStep() {
+  stopTimer();
   gCurrentStep++;
   saveQuestState();
   drawCurrentStep();
@@ -189,6 +220,7 @@ function goNextStep() {
 
 
 function resetQuest() {
+  stopTimer(); 
   gCurrentStep = 0;
   saveQuestState();
   drawCurrentStep();
@@ -234,6 +266,15 @@ function restoreQuestState() {
   const questState = data ? JSON.parse(data) : {step: 0};
 
   gCurrentStep = questState.step;
+}
+
+
+
+function stopTimer() {
+  if(gTimerInterval) {
+    clearInterval(gTimerInterval);
+    gTimerInterval = null;
+  }  
 }
 
 

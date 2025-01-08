@@ -2,7 +2,7 @@
     "steps":[
         {
             "type": "message",
-            "directions": "NEWAre you ready to start your quest?",
+            "directions": "Are you ready to start your quest?",
             "button": "START"
         },
         {
@@ -10,7 +10,8 @@
             "directions": "what color is the sky?",
             "input": "text",
             "button": "Check",
-            "answer": "blue"
+            "answer": "blue",
+            "countdown": {"minutes": 0, "seconds": 10}
         },
         {
             "type": "message",
