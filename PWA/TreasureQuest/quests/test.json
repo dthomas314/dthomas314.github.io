@@ -2,7 +2,7 @@
     "steps":[
         {
             "type": "message",
-            "directions": "Are you ready to start your quest?",
+            "directions": "This will be an epic quest to find the most magical treasure imaginable. Are you ready to start?",
             "button": "START"
         },
         {
@@ -20,20 +20,26 @@
         },
         {
             "type": "location",
+            "directions": "Go to the Southeast corner of the Barber basketball court",
+            "destination": {"coords": {"latitude":43.56739, "longitude":-116.14131}, "proximityMeters": 20},
+            "button": "Proceed"
+        },
+        {
+            "type": "location",
             "directions": "Go to the Tot Lot",
-            "destination": {"coords": {"latitude":43.566439, "longitude":-116.140272}, "proximityMeters": 20},
+            "destination": {"coords": {"latitude":43.566439, "longitude":-116.140272}, "proximityMeters": 50},
             "button": "Proceed"
         },
         {
             "type": "location",
             "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/video1.mp4\" type=\"video/mp4\">Your browser does not support videos</video>",
-            "destination": {"coords": {"latitude":43.56589, "longitude":-116.13950}, "proximityMeters": 20},
+            "destination": {"coords": {"latitude":43.56589, "longitude":-116.13950}, "proximityMeters": 50},
             "button": "OK"
         },
         {
             "type": "location",
             "directions": "<audio controls><source src=\"assets/audio1.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
-            "destination": {"coords": {"latitude":43.56516, "longitude":-116.13996}, "proximityMeters": 20},
+            "destination": {"coords": {"latitude":43.56516, "longitude":-116.13996}, "proximityMeters": 50},
             "button": "OK"
         }
     ]
