@@ -2,44 +2,47 @@
     "steps":[
         {
             "type": "message",
-            "directions": "This will be an epic quest to find the most magical treasure imaginable. Are you ready to start?",
-            "button": "START"
+            "directions": "Roy Kent needs your help!<br />He has gone missing on a recent trip to Boise. Please hurry!",
+            "button": "HELP ROY"
+        },
+        {
+            "type": "location",
+            "directions": "The last location of Roy's phone was at the intersection in Bown Crossing. Get over there and pick up his trail.",
+            "destination": {"coords": {"latitude":43.57418178252678, "longitude":-116.154888666378}, "proximityMeters": 50},
+            "button": "Proceed"
+        },
+        {
+            "type": "location",
+            "directions": "Look here! You found a strange note:<br ><img src=\"assets/ransom.png\"><br /><br /><strong>Get there!</strong>",
+            "destination": {"coords": {"latitude":43.576395062189896, "longitude":-116.14910850608474}, "proximityMeters": 50},
+            "button": "Now what?"
+        },
+        {
+            "type": "timer",
+            "directions": "Find an inconspicuous seat in the back and order some food. Someone will contact you in 15 minutes.",
+            "timer": {"minutes": 15, "seconds": 0},
+            "button": "OK"
         },
         {
             "type": "question",
-            "directions": "what color is the sky?",
+            "directions": "some sort of question. eventually want a dropdown. but want 1 text too - maybe get a PIN from ransom (review assets)",
             "input": "text",
             "button": "Check",
-            "answer": "blue",
-            "countdown": {"minutes": 0, "seconds": 10}
+            "answer": "blue"
         },
         {
-            "type": "message",
-            "directions": "Testing an image <img src=\"assets/map-sketch.jpg\"> <strong>Neat!</strong>",
+            "type": "location",
+            "directions": "Need a sketch...",
+            "note": "Beaver pond",
+            "destination": {"coords": {"latitude":43.57081754055886, "longitude":-116.13901578569262}, "proximityMeters": 20},
             "button": "OK"
         },
         {
             "type": "location",
-            "directions": "Go to the Southeast corner of the Barber basketball court",
-            "destination": {"coords": {"latitude":43.56739, "longitude":-116.14131}, "proximityMeters": 20},
-            "button": "Proceed"
-        },
-        {
-            "type": "location",
-            "directions": "Go to the Tot Lot",
-            "destination": {"coords": {"latitude":43.566439, "longitude":-116.140272}, "proximityMeters": 50},
-            "button": "Proceed"
-        },
-        {
-            "type": "location",
-            "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/video1.mp4\" type=\"video/mp4\">Your browser does not support videos</video>",
-            "destination": {"coords": {"latitude":43.56589, "longitude":-116.13950}, "proximityMeters": 50},
-            "button": "OK"
-        },
-        {
-            "type": "location",
-            "directions": "<audio controls><source src=\"assets/audio1.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
-            "destination": {"coords": {"latitude":43.56516, "longitude":-116.13996}, "proximityMeters": 50},
+            "directions": "<audio controls><source src=\"assets/Roy/helo-audio.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
+            "note": "Across from fishing dock",
+            "destination": {"coords": {"latitude":43.57001209708176, "longitude":-116.13538758726669}, "proximityMeters": 50},
+            "countdown": {"minutes": 3, "seconds": 0},
             "button": "OK"
         }
     ]
