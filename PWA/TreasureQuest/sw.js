@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "1.5.4";
+const VERSION = "2.0";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -17,10 +17,10 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/bootstrap.bundle.min.js",
   "/PWA/TreasureQuest/bootstrap.bundle.min.js.map",
   "/PWA/TreasureQuest/assets/failure.mp3",
-  "/PWA/TreasureQuest/assets/map-sketch.mp3",
   "/PWA/TreasureQuest/assets/success.mp3",
-  "/PWA/TreasureQuest/assets/video1.mp4",
-  "/PWA/TreasureQuest/assets/audio1.mp3"
+  "/PWA/TreasureQuest/assets/Roy/helo-audio.mp3",
+  "/PWA/TreasureQuest/assets/Roy/map-sketch.png",
+  "/PWA/TreasureQuest/assets/Roy/video1.mp4"
 ];
 
 // On install, cache the static resources

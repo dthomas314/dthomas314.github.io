@@ -1,4 +1,4 @@
-const TEST_MODE = true;
+const TEST_MODE = false;
 const DEBUG_AREA = document.querySelector('#debug');
 const STORAGE_KEY = "treasure-quest";
 const SUCCESS_SOUND = new Audio('assets/success.mp3');
@@ -107,15 +107,39 @@ function drawCurrentStep() {
         stepElement.appendChild(nextButton);      
         break;
       case 'question':
-        let stepInput = document.createElement('input');
-        stepInput.type = 'text'
+        let stepInput;
+        if(currentStep.input == 'dropdown') {
+          stepInput = document.createElement('select');
+          let newOption = document.createElement('option');
+          newOption.value = currentStep.initialOption.value;
+          newOption.text = currentStep.initialOption.text;
+          stepInput.appendChild(newOption);          
+          for(let optionIndex = 0; optionIndex < currentStep.options.length; optionIndex++) {
+            let newOption = document.createElement('option');
+            newOption.value = currentStep.options[optionIndex].value;
+            newOption.text = currentStep.options[optionIndex].text;
+            stepInput.appendChild(newOption);
+          }
+        } else {
+          stepInput = document.createElement('input');
+          stepInput.type = 'text'
+        }
         stepInput.classList.add('form-control');
         stepElement.appendChild(stepInput);   
 
         let submitButton = document.createElement('a');
         submitButton.href = 'javascript:';
         submitButton.addEventListener('click', function() {
-          if(stepInput.value == currentStep.answer) {
+          let isCorrect = false;
+
+          if(currentStep.input == 'dropdown') {
+            if(stepInput.selectedIndex > 0) {
+              isCorrect = (stepInput.options[stepInput.selectedIndex].value === currentStep.answer);
+            }
+          } else {
+            isCorrect = (stepInput.value === currentStep.answer);
+          }
+          if(isCorrect) {
             SUCCESS_SOUND.play();
             goNextStep();
           } else {
@@ -185,6 +209,32 @@ function drawCurrentStep() {
           locationError.innerText = 'Your device does not support location sharing, which is required to complete quest.';
           locationError.style.display = 'block';
         }
+        break;
+      case 'timed':
+        gTimerEnd = new Date(new Date().getTime() + (currentStep.timer.minutes * 60000) + (currentStep.timer.seconds * 1000));
+        console.log(gTimerEnd);
+        gTimerInterval = setInterval(() => {
+          let now = new Date().getTime();
+          let distance = gTimerEnd - now;
+          
+          if(distance <= 0) {
+            stopTimer();
+
+            if(currentStep.alert) {
+              alert(currentStep.alert);
+            }
+            
+            let nextButton = document.createElement('a');
+            nextButton.href = 'javascript:';
+            nextButton.addEventListener('click', function() {
+              goNextStep();
+            });
+            nextButton.innerText = currentStep.button;
+            nextButton.classList.add('btn');
+            nextButton.classList.add('btn-primary');
+            stepElement.appendChild(nextButton);
+          }                
+        }, 1000);        
         break;
     }
 

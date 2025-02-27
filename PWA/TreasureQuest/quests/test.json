@@ -12,28 +12,46 @@
             "button": "Proceed"
         },
         {
+            "type": "question",
+            "directions": "Are you willing to spend a little money to save Roy's life?",
+            "destination": {"coords": {"latitude":43.57418178252678, "longitude":-116.154888666378}, "proximityMeters": 50},
+            "input": "dropdown",
+            "initialOption": {"text":"--pick your option--", "value": ""},
+            "options": [{"text": "YES", "value": "YES"}, {"text": "NO", "value": "NO"}],
+            "button": "Submit",
+            "answer": "YES"
+        },
+        {
             "type": "location",
             "directions": "Look here! You found a strange note:<br ><img src=\"assets/ransom.png\"><br /><br /><strong>Get there!</strong>",
             "destination": {"coords": {"latitude":43.576395062189896, "longitude":-116.14910850608474}, "proximityMeters": 50},
             "button": "Now what?"
         },
         {
-            "type": "timer",
+            "type": "timed",
             "directions": "Find an inconspicuous seat in the back and order some food. Someone will contact you in 15 minutes.",
-            "timer": {"minutes": 15, "seconds": 0},
-            "button": "OK"
+            "timer": {"minutes": 0, "seconds": 10},
+            "alert": "Authorization Code: 9337",
+            "button": "Proceed"
         },
         {
             "type": "question",
-            "directions": "some sort of question. eventually want a dropdown. but want 1 text too - maybe get a PIN from ransom (review assets)",
+            "directions": "Enter your Authorization Code to continue:",
             "input": "text",
             "button": "Check",
-            "answer": "blue"
+            "answer": "9337"
         },
         {
             "type": "location",
-            "directions": "Need a sketch...",
-            "note": "Beaver pond",
+            "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/Roy/video1.mp4\" type=\"video/mp4\">Your browser does not support videos</video>",
+            "note": "Marianne Williams Gazebo",
+            "destination": {"coords": {"latitude":43.57195649022608, "longitude":-116.14061012718551}, "proximityMeters": 50},
+            "button": "OK"
+        },
+        {
+            "type": "location",
+            "directions": "It looks like Roy may have left you a clue:<br /><img src=\"assets/Roy/map-sketch.png\" style=\"max-width:400px;\">",
+            "note": "Along sidewalk trail",
             "destination": {"coords": {"latitude":43.57081754055886, "longitude":-116.13901578569262}, "proximityMeters": 20},
             "button": "OK"
         },
@@ -42,7 +60,7 @@
             "directions": "<audio controls><source src=\"assets/Roy/helo-audio.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
             "note": "Across from fishing dock",
             "destination": {"coords": {"latitude":43.57001209708176, "longitude":-116.13538758726669}, "proximityMeters": 50},
-            "countdown": {"minutes": 3, "seconds": 0},
+            "countdown": {"minutes": 3, "seconds": 16},
             "button": "OK"
         }
     ]
