@@ -23,7 +23,7 @@
         },
         {
             "type": "location",
-            "directions": "Look here! You found a strange note:<br ><img src=\"assets/ransom.png\"><br /><br /><strong>Get there!</strong>",
+            "directions": "Look here! You found a strange note:<br ><img src=\"assets/Roy/ransom.png\"><br /><br /><strong>Get there!</strong>",
             "destination": {"coords": {"latitude":43.576395062189896, "longitude":-116.14910850608474}, "proximityMeters": 50},
             "button": "Now what?"
         },
