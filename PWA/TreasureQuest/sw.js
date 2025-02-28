@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "2.0.5";
+const VERSION = "2.0.9";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -12,15 +12,15 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/style.css",
   "/PWA/TreasureQuest/icons/icon.svg",
   "/PWA/TreasureQuest/quests/test.json",
-  "/PWA/TreasureQuest/bootstrap.min.css",
-  "/PWA/TreasureQuest/bootstrap.min.css.map",
-  "/PWA/TreasureQuest/bootstrap.bundle.min.js",
-  "/PWA/TreasureQuest/bootstrap.bundle.min.js.map",
-  "/PWA/TreasureQuest/assets/Roy/ransom.png",  
+  "/PWA/TreasureQuest/bootstrap/bootstrap.min.css",
+  "/PWA/TreasureQuest/bootstrap/bootstrap.min.css.map",
+  "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js",
+  "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js.map",
   "/PWA/TreasureQuest/assets/failure.mp3",
   "/PWA/TreasureQuest/assets/success.mp3",
   "/PWA/TreasureQuest/assets/Roy/helo-audio.mp3",
   "/PWA/TreasureQuest/assets/Roy/map-sketch.png",
+  "/PWA/TreasureQuest/assets/Roy/ransom.png",
   "/PWA/TreasureQuest/assets/Roy/video1.mp4"
 ];
 
@@ -66,14 +66,15 @@ self.addEventListener('fetch', (e) => {
         console.log(`[Service Worker] Fetching from cache: ${e.request.url}`);
 
         // Return the cached response if it's available.
-        if (cachedResponse) return cachedResponse;
-
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        
         //No cache => try to fetch from network
         console.log(`Not cached`);
         console.log(`[Service Worker] Fetching from network: ${e.request.url}`);
         const response = await fetch(e.request);
 
-        console.log(response);
         if (response) {
           cache.put(e.request.url, response.clone());
         }
