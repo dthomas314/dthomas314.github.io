@@ -1,5 +1,5 @@
 // The version of the cache.
-const VERSION = "2.0.3";
+const VERSION = "2.0.4";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -18,10 +18,10 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/bootstrap.bundle.min.js.map",
   "/PWA/TreasureQuest/assets/failure.mp3",
   "/PWA/TreasureQuest/assets/success.mp3",
-  "https://dthomas314.github.io/PWA/TreasureQuest/assets/Roy/helo-audio.mp3",
-  "https://dthomas314.github.io/PWA/TreasureQuest/assets/Roy/map-sketch.png",
-  "https://dthomas314.github.io/PWA/TreasureQuest/assets/Roy/ransom.png",
-  "https://dthomas314.github.io/PWA/TreasureQuest/assets/Roy/video1.mp4"
+  "/PWA/TreasureQuest/assets/Roy/helo-audio.mp3",
+  "/PWA/TreasureQuest/assets/Roy/map-sketch.png",
+  "/PWA/TreasureQuest/assets/Roy/ransom.png",
+  "/PWA/TreasureQuest/assets/Roy/video1.mp4"
 ];
 
 // On install, cache the static resources
@@ -55,25 +55,28 @@ self.addEventListener("activate", (event) => {
 // Fetching content using Service Worker
 self.addEventListener('fetch', (e) => {
     // Cache http and https only, skip unsupported chrome-extension:// and file://...
-    if (!(
-       e.request.url.startsWith('http:') || e.request.url.startsWith('https:')
-    )) {
+    if (!(e.request.url.startsWith('http:') || e.request.url.startsWith('https:'))) {
         return; 
     }
 
     e.respondWith((async () => {
         const cache = await caches.open(CACHE_NAME);
-        const cachedResponse = await cache.match(e.request.url);
+        const cachedResponse = await cache.match(e.request);
 
-        console.log(`[Service Worker] Fetching resource: ${e.request.url}`);
+        console.log(`[Service Worker] Fetching from cache: ${e.request.url}`);
 
         // Return the cached response if it's available.
         if (cachedResponse) return cachedResponse;
 
         //No cache => try to fetch from network
-        console.log(`[Service Worker] Caching new resource: ${e.request.url}`);
+        console.log(`Not cached`);
+        console.log(`[Service Worker] Fetching from network: ${e.request.url}`);
         const response = await fetch(e.request);
-        cache.put(e.request.url, response.clone());
+
+        console.log(response);
+        if (response) {
+          cache.put(e.request.url, response.clone());
+        }
 
         return response;
     })());
