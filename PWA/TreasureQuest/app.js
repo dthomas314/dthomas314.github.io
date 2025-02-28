@@ -1,4 +1,4 @@
-const TEST_MODE = false;
+const TEST_MODE = true;
 const DEBUG_AREA = document.querySelector('#debug');
 const STORAGE_KEY = "treasure-quest";
 const SUCCESS_SOUND = new Audio('assets/success.mp3');
