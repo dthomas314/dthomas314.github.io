@@ -104,5 +104,5 @@ class QuestDB {
                 RESOLVE(mediaPath + ' added to db.');
             });
         });
-    }    
+    }   
 };

@@ -1,7 +1,7 @@
 importScripts('questDB.js');
 
 // The version of the cache.
-const VERSION = "2.0.13";
+const VERSION = "2.0.14";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -92,52 +92,66 @@ self.addEventListener('fetch', (e) => {
   const domain = new URL(fullUrl).origin;
   const relativePath = fullUrl.replace(domain, '')
 
-    // Cache http and https only, skip unsupported chrome-extension:// and file://...
-    if (!(fullUrl.startsWith('http:') || fullUrl.startsWith('https:'))) {
-        return; 
+  // Cache http and https only, skip unsupported chrome-extension:// and file://...
+  if (!(fullUrl.startsWith('http:') || fullUrl.startsWith('https:'))) {
+      return; 
+  }
+
+  e.respondWith((async () => {
+    if(fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) {
+      questDB.waitConnected()
+      .then(() => {
+        questDB.getMedia(relativePath)
+        .then((media) => {
+          if(media.blob) {
+            console.log(`[Service Worker] Fetching from questDB: ${relativePath}`);
+            //testVideoSource.src = window.URL.createObjectURL(media.blob);
+            return media.blob;
+          }
+        })
+        .catch((error) => {
+          //console.error(error);
+        });
+      }).catch(() => {
+        console.log('no db');
+      });   
+    } else {
+      const cache = await caches.open(CACHE_NAME);
+      const cachedResponse = await cache.match(e.request);
+
+      console.log(`[Service Worker] Fetching from cache: ${relativePath}`);
+
+      // Return the cached response if it's available.
+      if (cachedResponse) {
+        return cachedResponse;
+      }
     }
 
-    e.respondWith((async () => {
+    //No cache => try to fetch from network
+    console.log(`[Service Worker] Fetching from network: ${fullUrl}`);
+    const response = await fetch(e.request);
+
+    if (response) {
       if(fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) {
         questDB.waitConnected()
         .then(() => {
-          questDB.getMedia(relativePath)
+          questDB.addMedia(relativePath)
           .then((media) => {
-            if(media.blob) {
-              console.log(`[Service Worker] Fetching from questDB: ${relativePath}`);
-              //testVideoSource.src = window.URL.createObjectURL(media.blob);
-              return media.blob;
-            }
+            //Media added
           })
           .catch((error) => {
             //console.error(error);
           });
         }).catch(() => {
           console.log('no db');
-        });   
+        });
       } else {
-        const cache = await caches.open(CACHE_NAME);
-        const cachedResponse = await cache.match(e.request);
-
-        console.log(`[Service Worker] Fetching from cache: ${relativePath}`);
-
-        // Return the cached response if it's available.
-        if (cachedResponse) {
-          return cachedResponse;
-        }
+        cache.put(fullUrl, response.clone());
       }
+    }
 
-      //No cache => try to fetch from network
-      console.log(`[Service Worker] Fetching from network: ${fullUrl}`);
-      const response = await fetch(e.request);
-
-      if (response) {
-        //TODO: cache vs indexDB based on type
-        //cache.put(e.request.url, response.clone());
-      }
-
-      return response;      
-    })());
+    return response;      
+  })());
 });
 
 
