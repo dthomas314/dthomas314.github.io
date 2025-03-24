@@ -1,5 +1,7 @@
+importScripts('questDB.js');
+
 // The version of the cache.
-const VERSION = "2.0.9";
+const VERSION = "2.0.13";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -9,6 +11,7 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/",
   "/PWA/TreasureQuest/index.html",
   "/PWA/TreasureQuest/app.js",
+  "/PWA/TreasureQuest/questDB.js",
   "/PWA/TreasureQuest/style.css",
   "/PWA/TreasureQuest/icons/icon.svg",
   "/PWA/TreasureQuest/quests/test.json",
@@ -16,13 +19,27 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/bootstrap/bootstrap.min.css.map",
   "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js",
   "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js.map",
-  "/PWA/TreasureQuest/assets/failure.mp3",
-  "/PWA/TreasureQuest/assets/success.mp3",
-  "/PWA/TreasureQuest/assets/Roy/helo-audio.mp3",
   "/PWA/TreasureQuest/assets/Roy/map-sketch.png",
-  "/PWA/TreasureQuest/assets/Roy/ransom.png",
+  "/PWA/TreasureQuest/assets/Roy/ransom.png"
+];
+
+const APP_MEDIA = [
+  "/PWA/TreasureQuest/assets/failure.mp3",
+  "/PWA/TreasureQuest/assets/success.mp3",  
+  "/PWA/TreasureQuest/assets/Roy/helo-audio.mp3",
   "/PWA/TreasureQuest/assets/Roy/video1.mp4"
 ];
+
+// Connect to indexDB
+const questDB = new QuestDB();
+questDB.connect()
+.then((message) => {
+  console.log(message);
+})
+.catch((error) => {
+  console.error(error);
+});
+
 
 // On install, cache the static resources
 self.addEventListener("install", (event) => {
@@ -32,7 +49,16 @@ self.addEventListener("install", (event) => {
       cache.addAll(APP_STATIC_RESOURCES);
     })(),
   );
+
+  //Add media to indexDB
+  questDB.waitConnected()
+  .then(() => {
+    checkMedia();
+  }).catch(() => {
+    console.log('no db');
+  });
 });
+
 
 // delete old caches on activate
 self.addEventListener("activate", (event) => {
@@ -49,36 +75,87 @@ self.addEventListener("activate", (event) => {
       await clients.claim();
     })(),
   );
+
+  //Add media to indexDB
+  questDB.waitConnected()
+  .then(() => {
+    checkMedia();
+  }).catch(() => {
+    console.log('no db');
+  });  
 });
 
 
 // Fetching content using Service Worker
 self.addEventListener('fetch', (e) => {
+  const fullUrl = e.request.url;
+  const domain = new URL(fullUrl).origin;
+  const relativePath = fullUrl.replace(domain, '')
+
     // Cache http and https only, skip unsupported chrome-extension:// and file://...
-    if (!(e.request.url.startsWith('http:') || e.request.url.startsWith('https:'))) {
+    if (!(fullUrl.startsWith('http:') || fullUrl.startsWith('https:'))) {
         return; 
     }
 
     e.respondWith((async () => {
+      if(fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) {
+        questDB.waitConnected()
+        .then(() => {
+          questDB.getMedia(relativePath)
+          .then((media) => {
+            if(media.blob) {
+              console.log(`[Service Worker] Fetching from questDB: ${relativePath}`);
+              //testVideoSource.src = window.URL.createObjectURL(media.blob);
+              return media.blob;
+            }
+          })
+          .catch((error) => {
+            //console.error(error);
+          });
+        }).catch(() => {
+          console.log('no db');
+        });   
+      } else {
         const cache = await caches.open(CACHE_NAME);
         const cachedResponse = await cache.match(e.request);
 
-        console.log(`[Service Worker] Fetching from cache: ${e.request.url}`);
+        console.log(`[Service Worker] Fetching from cache: ${relativePath}`);
 
         // Return the cached response if it's available.
         if (cachedResponse) {
           return cachedResponse;
         }
-        
-        //No cache => try to fetch from network
-        console.log(`Not cached`);
-        console.log(`[Service Worker] Fetching from network: ${e.request.url}`);
-        const response = await fetch(e.request);
+      }
 
-        if (response) {
-          cache.put(e.request.url, response.clone());
-        }
+      //No cache => try to fetch from network
+      console.log(`[Service Worker] Fetching from network: ${fullUrl}`);
+      const response = await fetch(e.request);
 
-        return response;
+      if (response) {
+        //TODO: cache vs indexDB based on type
+        //cache.put(e.request.url, response.clone());
+      }
+
+      return response;      
     })());
 });
+
+
+function checkMedia() {
+  APP_MEDIA.forEach(mediaPath => {
+    questDB.checkMediaExists(mediaPath)
+    .then((exists) => {
+      if(exists) {
+        console.log(mediaPath + ' exists');
+      } else {
+        questDB.addMedia(mediaPath)
+        .then((message) => {
+          console.log(message);
+        });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  });  
+}
