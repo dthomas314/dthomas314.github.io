@@ -333,7 +333,6 @@ function showDownloads() {
   const questDB = new QuestDB();
   questDB.connect()
   .then((message) => {
-    console.log(message);
     questDB.listContents().then((contents) => {
       document.querySelector('#downloadStatus').innerHTML += contents;
     });

@@ -1,7 +1,7 @@
 importScripts('questDB.js');
 
 // The version of the cache.
-const VERSION = "2.0.22";
+const VERSION = "2.0.23";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -15,17 +15,17 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/style.css",
   "/PWA/TreasureQuest/icons/icon.svg",
   "/PWA/TreasureQuest/quests/test.json",
-  "/PWA/TreasureQuest/assets/Roy/map-sketch.png",  
+  "/PWA/TreasureQuest/assets/failure.mp3",
+  "/PWA/TreasureQuest/assets/success.mp3",  
+  "/PWA/TreasureQuest/assets/Roy/map-sketch.png",
+  "/PWA/TreasureQuest/assets/Roy/ransom.png",  
   "/PWA/TreasureQuest/bootstrap/bootstrap.min.css",
   "/PWA/TreasureQuest/bootstrap/bootstrap.min.css.map",
   "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js",
-  "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js.map",
-  "/PWA/TreasureQuest/assets/Roy/ransom.png"
+  "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js.map"
 ];
 
-const APP_MEDIA = [
-  "/PWA/TreasureQuest/assets/failure.mp3",
-  "/PWA/TreasureQuest/assets/success.mp3",  
+const APP_MEDIA = [ 
   "/PWA/TreasureQuest/assets/Roy/helo-audio.mp3",
   "/PWA/TreasureQuest/assets/Roy/video1.mp4"
 ];
@@ -99,10 +99,9 @@ console.log('fetch ' + e.request.url);
   }
 
   e.respondWith((async () => {
-    if(fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) {
+    if((fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) && relativePath.startsWith('/PWA/TreasureQuest/assets/Roy/')) {
       questDB.waitConnected()
       .then(() => {
-        console.log('should find ' + relativePath);
         questDB.getMedia(relativePath)
         .then((media) => {
           if(media.blob) {
@@ -134,7 +133,7 @@ console.log('fetch ' + e.request.url);
     const response = await fetch(e.request);
 
     if (response) {
-      if(fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) {
+      if((fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) && relativePath.startsWith('/PWA/TreasureQuest/assets/Roy/')) {
         questDB.waitConnected()
         .then(() => {
           questDB.addMedia(relativePath)
