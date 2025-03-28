@@ -104,5 +104,11 @@ class QuestDB {
                 RESOLVE(mediaPath + ' added to db.');
             });
         });
-    }   
+    }
+
+
+
+    listContents() {
+        return this.mediaDB.objectStoreNames;
+    }
 };

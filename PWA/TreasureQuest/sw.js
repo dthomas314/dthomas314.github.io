@@ -102,6 +102,7 @@ self.addEventListener('fetch', (e) => {
     if(fullUrl.endsWith('.mp3') || fullUrl.endsWith('.mp4')) {
       questDB.waitConnected()
       .then(() => {
+        console.log('should find ' + relativePath);
         questDB.getMedia(relativePath)
         .then((media) => {
           if(media.blob) {
