@@ -23,7 +23,7 @@
         },
         {
             "type": "location",
-            "directions": "Look here! You found a strange note:<br ><img src=\"assets/Roy/ransom.png\"><br /><br /><strong>Get there!</strong>",
+            "directions": "Look here! You found a strange note:<br ><img src=\"assets/Roy/ransom.png\" class=\"img-fluid\"><br /><br /><strong>Get there!</strong>",
             "destination": {"coords": {"latitude":43.576395062189896, "longitude":-116.14910850608474}, "proximityMeters": 50},
             "button": "Now what?"
         },
@@ -50,7 +50,7 @@
         },
         {
             "type": "location",
-            "directions": "It looks like Roy may have left you a clue:<br /><img src=\"assets/Roy/map-sketch.png\" style=\"max-width:400px;\">",
+            "directions": "It looks like Roy may have left you a clue:<br /><img src=\"assets/Roy/map-sketch.png\" class=\"img-fluid\" style=\"max-width:400px;\">",
             "note": "Along sidewalk trail",
             "destination": {"coords": {"latitude":43.57081754055886, "longitude":-116.13901578569262}, "proximityMeters": 20},
             "button": "OK"

@@ -109,6 +109,6 @@ class QuestDB {
 
 
     listContents() {
-        return this.mediaDB.objectStoreNames;
+        return this.mediaDB.objectStoreNames[0];
     }
 };

@@ -1,7 +1,7 @@
 importScripts('questDB.js');
 
 // The version of the cache.
-const VERSION = "2.0.18";
+const VERSION = "2.0.20";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
