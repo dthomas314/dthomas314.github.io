@@ -336,7 +336,7 @@ function showDownloads() {
     console.log(message);
   })
   .catch((error) => {
-    console.error('what the heck' + error);
+    console.error(error);
   });  
   document.querySelector('#downloadStatus').style.display = 'block';
 }

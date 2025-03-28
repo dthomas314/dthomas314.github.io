@@ -29,8 +29,8 @@ class QuestDB {
                 //Setup schema if new db, or alter if increasing version
                 const db = event.target.result;
             
-                if (event.oldVersion < this.MEDIA_DB_VERSION) {
-                db.deleteObjectStore('media');  
+                if (event.oldVersion < this.MEDIA_DB_VERSION && db.objectStoreNames.contains('media')) {
+                    db.deleteObjectStore('media');
                 }
             
                 db.createObjectStore('media', { keyPath: 'path' });
