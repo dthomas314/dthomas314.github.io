@@ -1,7 +1,7 @@
 importScripts('questDB.js');
 
 // The version of the cache.
-const VERSION = "2.0.20";
+const VERSION = "2.0.22";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -92,7 +92,7 @@ self.addEventListener('fetch', (e) => {
   const domain = new URL(fullUrl).origin;
   const relativePath = fullUrl.replace(domain, '');
   let cache;
-
+console.log('fetch ' + e.request.url);
   // Cache http and https only, skip unsupported chrome-extension:// and file://...
   if (!(fullUrl.startsWith('http:') || fullUrl.startsWith('https:'))) {
       return; 

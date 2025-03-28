@@ -109,6 +109,18 @@ class QuestDB {
 
 
     listContents() {
-        return this.mediaDB.objectStoreNames[0];
+        return new Promise((RESOLVE, REJECT) => {
+            let contents = '';
+    
+            const mediaObjectStore = this.mediaDB.transaction('media').objectStore('media');
+            let allRecords = mediaObjectStore.getAll();
+            allRecords.onsuccess = function() {
+                for(let index = 0; index < allRecords.result.length; index++) {
+                    contents += allRecords.result[index].path + '<br />';
+                }
+                console.log(contents);
+                RESOLVE(contents);
+            };
+        });            
     }
 };
