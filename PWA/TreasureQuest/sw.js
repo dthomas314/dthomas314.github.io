@@ -1,7 +1,7 @@
 importScripts('questDB.js');
 
 // The version of the cache.
-const VERSION = "2.0.16";
+const VERSION = "2.0.17";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -117,7 +117,7 @@ self.addEventListener('fetch', (e) => {
         console.log('no db');
       });   
     } else {
-      let cache = await caches.open(CACHE_NAME);
+      cache = await caches.open(CACHE_NAME);
       const cachedResponse = await cache.match(e.request);
 
       console.log(`[Service Worker] Fetching from cache: ${relativePath}`);
