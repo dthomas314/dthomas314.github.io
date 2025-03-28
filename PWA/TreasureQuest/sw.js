@@ -1,7 +1,7 @@
 importScripts('questDB.js');
 
 // The version of the cache.
-const VERSION = "2.0.17";
+const VERSION = "2.0.18";
 
 // The name of the cache
 const CACHE_NAME = `treasure-quest-${VERSION}`;
@@ -15,11 +15,11 @@ const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/style.css",
   "/PWA/TreasureQuest/icons/icon.svg",
   "/PWA/TreasureQuest/quests/test.json",
+  "/PWA/TreasureQuest/assets/Roy/map-sketch.png",  
   "/PWA/TreasureQuest/bootstrap/bootstrap.min.css",
   "/PWA/TreasureQuest/bootstrap/bootstrap.min.css.map",
   "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js",
   "/PWA/TreasureQuest/bootstrap/bootstrap.bundle.min.js.map",
-  "/PWA/TreasureQuest/assets/Roy/map-sketch.png",
   "/PWA/TreasureQuest/assets/Roy/ransom.png"
 ];
 

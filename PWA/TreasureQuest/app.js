@@ -334,10 +334,12 @@ function showDownloads() {
   questDB.connect()
   .then((message) => {
     console.log(message);
+    console.log(questDB.objectStoreNames)
   })
   .catch((error) => {
     console.error(error);
-  });  
+  });
+  
   document.querySelector('#downloadStatus').style.display = 'block';
 }
 
