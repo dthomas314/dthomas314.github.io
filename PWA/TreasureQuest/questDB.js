@@ -2,7 +2,7 @@
 
 class QuestDB {
     MEDIA_DB_NAME = 'TreasureQuestDB';
-    MEDIA_DB_VERSION = 2;
+    MEDIA_DB_VERSION = 3;
     mediaDB;
     state = 'disconnected';
 
@@ -16,7 +16,7 @@ class QuestDB {
 
             openDBRequest.onerror = event => {
                 this.state = 'error';
-                REJECT('Error opening database');
+                REJECT(event.target.error);
             }
             
             openDBRequest.onsuccess = event => {

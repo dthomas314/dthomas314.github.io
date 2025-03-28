@@ -329,4 +329,18 @@ function stopTimer() {
 
 
 
+function showDownloads() {
+  const questDB = new QuestDB();
+  questDB.connect()
+  .then((message) => {
+    console.log(message);
+  })
+  .catch((error) => {
+    console.error('what the heck' + error);
+  });  
+  document.querySelector('#downloadStatus').style.display = 'block';
+}
+
+
+
 setupQuest();
