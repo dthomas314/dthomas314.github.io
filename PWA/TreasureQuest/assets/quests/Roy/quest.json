@@ -23,7 +23,7 @@
         },
         {
             "type": "location",
-            "directions": "Look here! You found a strange note:<br ><img src=\"assets/Roy/ransom.png\" class=\"img-fluid\"><br /><br /><strong>Get there!</strong>",
+            "directions": "Look here! You found a strange note:<br ><img src=\"assets/quests/Roy/ransom.png\" class=\"img-fluid\"><br /><br /><strong>Get there!</strong>",
             "destination": {"coords": {"latitude":43.576395062189896, "longitude":-116.14910850608474}, "proximityMeters": 50},
             "button": "Now what?"
         },
@@ -43,21 +43,21 @@
         },
         {
             "type": "location",
-            "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/Roy/video1.mp4\" type=\"video/mp4\">Your browser does not support videos</video>",
+            "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/quests/Roy/video1.mp4\" type=\"video/mp4\">Your browser does not support videos</video>",
             "note": "Marianne Williams Gazebo",
             "destination": {"coords": {"latitude":43.57195649022608, "longitude":-116.14061012718551}, "proximityMeters": 50},
             "button": "OK"
         },
         {
             "type": "location",
-            "directions": "It looks like Roy may have left you a clue:<br /><img src=\"assets/Roy/map-sketch.png\" class=\"img-fluid\" style=\"max-width:400px;\">",
+            "directions": "It looks like Roy may have left you a clue:<br /><img src=\"assets/quests/Roy/map-sketch.png\" class=\"img-fluid\" style=\"max-width:400px;\">",
             "note": "Along sidewalk trail",
             "destination": {"coords": {"latitude":43.57081754055886, "longitude":-116.13901578569262}, "proximityMeters": 20},
             "button": "OK"
         },
         {
             "type": "location",
-            "directions": "<audio controls><source src=\"assets/Roy/helo-audio.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
+            "directions": "<audio controls><source src=\"assets/quests/Roy/helo-audio.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
             "note": "Across from fishing dock",
             "destination": {"coords": {"latitude":43.57001209708176, "longitude":-116.13538758726669}, "proximityMeters": 50},
             "countdown": {"minutes": 3, "seconds": 16},

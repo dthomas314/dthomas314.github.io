@@ -1,0 +1,16 @@
+{
+    "quests": [
+        {
+            "questID": 1,
+            "name": "Save Roy Kent",
+            "assetsFolder": "Roy",
+            "version": 1
+        },
+        {
+            "questID": 2,
+            "name": "Fake",
+            "assetsFolder": "fake one",
+            "version": 1
+        }
+    ]
+}

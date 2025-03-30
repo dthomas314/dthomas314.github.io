@@ -4,27 +4,31 @@ const STORAGE_KEY = "treasure-quest";
 const SUCCESS_SOUND = new Audio('assets/success.mp3');
 const FAILURE_SOUND = new Audio('assets/failure.mp3');
 
+const questDB = new QuestDB();
+let gAllQuests = new QuestCollection();
 let gQuest = {};
 let gCurrentStep = 0;
 let gTimerInterval = null;
 let gTimerEnd = null;
 
 
-function setupQuest() {  
+function initialize() {
   if(TEST_MODE)
     DEBUG_AREA.style.display = 'block';
 
-  //Setup current state
-  restoreQuestState();
-
-  //Load quest  
-  loadQuest();
+  questDB.connect()
+  .then((message) => {
+    loadAllQuests();
+  })
+  .catch((error) => {
+    alert(`Unable to connect to database: ${error}`);
+  });
 }
 
 
 
-function loadQuest() {
-  fetch("quests/test.json")
+function loadAllQuests() {
+  fetch("quests.json")
   .then((res) => {
       if (!res.ok) {
           throw new Error
@@ -33,8 +37,26 @@ function loadQuest() {
       return res.json();
   })
   .then((data) => {   
-    gQuest = data; 
-    drawCurrentStep();
+    gAllQuests.quests = data.quests;
+    let menu = document.querySelector('#menu');
+    menu.innerHTML = '';
+
+    for(let questIndex = 0; questIndex < gAllQuests.quests.length; questIndex++) {
+      questDB.getQuest(gAllQuests.quests[questIndex].questID)
+      .then((quest) => {
+        if(quest) {
+          addQuestToMenu(gAllQuests.quests[questIndex], quest);
+        } else {
+          questDB.addQuest(gAllQuests.quests[questIndex])
+          .then((quest) => {
+            addQuestToMenu(gAllQuests.quests[questIndex], quest);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });      
+    }
   })
   .catch((error) =>
       console.error("Unable to fetch data:", error));
@@ -42,7 +64,114 @@ function loadQuest() {
 
 
 
-function drawCurrentStep() {
+function addQuestToMenu(newQuest, dbQuest) {
+  let menu = document.querySelector('#menu');
+  let menuElement = document.createElement('div');
+
+  let nameElement = document.createElement('span');
+  nameElement.innerText = newQuest.name;
+  menuElement.appendChild(nameElement);
+  
+  let statusElement = document.createElement('span');
+  statusElement.style.marginLeft = "10px";
+  let needDownload = true;  
+  let canPlay = false;
+   
+
+  if(dbQuest.downloadedVersion === null) {
+    statusElement.innerText = "not installed";
+  } else {
+    if(dbQuest.downloadedVersion === newQuest.version) {
+      statusElement.innerText = "current";
+      needDownload = false;
+      canPlay = true;    
+    } else {
+      statusElement.innerText = "update needed";
+      canPlay = true;
+    }
+  }
+  menuElement.appendChild(statusElement);
+
+  if(needDownload) {
+    let downloadButton = document.createElement('a');
+    downloadButton.style.marginLeft = "10px";
+    downloadButton.href = 'javascript:';
+    downloadButton.addEventListener('click', function() {
+      downloadQuest(newQuest.questID);
+    });
+    downloadButton.innerText = 'Download';
+    downloadButton.classList.add('btn');
+    downloadButton.classList.add('btn-secondary');
+    menuElement.appendChild(downloadButton);
+  }
+
+  if(canPlay) {
+    let playButton = document.createElement('a');
+    playButton.style.marginLeft = "10px";
+    playButton.href = 'javascript:';
+    playButton.addEventListener('click', function() {
+      playQuest(newQuest.questID);
+    });
+    playButton.innerText = 'Play';
+    playButton.classList.add('btn');
+    playButton.classList.add('btn-primary');
+    menuElement.appendChild(playButton);
+  }
+
+  menu.appendChild(menuElement);
+}
+
+
+
+
+async function downloadQuest(questID) {
+  let newQuest = gAllQuests.getByID(questID);
+  let dbQuest = await questDB.updateQuestJSON(newQuest);
+
+  if(dbQuest) {
+    let assets = Quest.getQuestAssets(dbQuest);
+
+    for(assetIndex = 0; assetIndex < assets.length; assetIndex++) {
+      let path = await questDB.updateAsset(questID, assets[assetIndex]);
+      
+      console.log(`${assetIndex+1} of ${assets.length}: ${path}`);
+      /*
+      questDB.updateAsset(questID, assets[assetIndex]).then((media) => {
+        console.log(`${assetIndex+1} of ${assets.length}: ${media}`);
+      })
+      */      
+    }
+
+    await questDB.updateQuestVersion(newQuest);
+
+    loadAllQuests();
+  } else {
+    console.log('JSON load failed');
+  }
+}
+
+
+
+async function playQuest(questID) {
+  let canvas = document.querySelector('#canvas');
+  let menu = document.querySelector('#menu');
+
+  canvas.style.display = 'block';
+  menu.style.display = 'none';
+
+  let dbQuest = await questDB.getQuest(questID);
+
+  gQuest = dbQuest.questJSON;
+
+  restoreQuestState();
+  drawCurrentStep();
+}
+
+
+
+
+async function drawCurrentStep() {
+  let rootURL = window.location.protocol + '//' + window.location.host;
   let canvas = document.querySelector('#canvas');
   canvas.innerHTML = '';
 
@@ -64,7 +193,19 @@ function drawCurrentStep() {
     //Display text
     let directions = document.createElement('div');
     directions.classList.add('directions');
-    directions.innerHTML = currentStep.directions;
+    let assetElements = Quest.getStepAssetElements(currentStep);
+    let directionMarkup = currentStep.directions;
+    for(assetIndex = 0; assetIndex < assetElements.length; assetIndex++) {
+      let originalMarkup = assetElements[assetIndex].outerHTML;
+      let path = assetElements[assetIndex].src;
+      if (path.indexOf('http') != 0)
+        path = rootURL + '/' + path;
+      let asset = await questDB.getAsset(path);
+      assetElements[assetIndex].src = window.URL.createObjectURL(asset.blob);
+      let newMarkup = assetElements[assetIndex].outerHTML;
+      directionMarkup = directionMarkup.replace(originalMarkup, newMarkup);
+    }
+    directions.innerHTML = directionMarkup;
     stepElement.appendChild(directions);
 
     //Check for countdown
@@ -330,20 +471,15 @@ function stopTimer() {
 
 
 function showDownloads() {
-  const questDB = new QuestDB();
-  questDB.connect()
-  .then((message) => {
+
     questDB.listContents().then((contents) => {
       document.querySelector('#downloadStatus').innerHTML += contents;
     });
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+
 
   document.querySelector('#downloadStatus').style.display = 'block';
 }
 
 
 
-setupQuest();
+initialize();

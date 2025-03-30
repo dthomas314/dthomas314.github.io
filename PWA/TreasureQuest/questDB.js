@@ -1,9 +1,9 @@
 //Helper for IndexedDB API
 
 class QuestDB {
-    MEDIA_DB_NAME = 'TreasureQuestDB';
-    MEDIA_DB_VERSION = 3;
-    mediaDB;
+    DB_NAME = 'TreasureQuestDB';
+    DB_VERSION = 5;
+    db;
     state = 'disconnected';
 
     constructor() {}
@@ -12,7 +12,7 @@ class QuestDB {
         this.state = 'connecting';
 
         return new Promise((RESOLVE, REJECT) => {        
-            const openDBRequest = indexedDB.open(this.MEDIA_DB_NAME, this.MEDIA_DB_VERSION);
+            const openDBRequest = indexedDB.open(this.DB_NAME, this.DB_VERSION);
 
             openDBRequest.onerror = event => {
                 this.state = 'error';
@@ -20,7 +20,7 @@ class QuestDB {
             }
             
             openDBRequest.onsuccess = event => {
-                this.mediaDB = event.target.result;
+                this.db = event.target.result;
                 this.state = 'connected';
                 RESOLVE('connected');
             }
@@ -29,11 +29,18 @@ class QuestDB {
                 //Setup schema if new db, or alter if increasing version
                 const db = event.target.result;
             
-                if (event.oldVersion < this.MEDIA_DB_VERSION && db.objectStoreNames.contains('media')) {
-                    db.deleteObjectStore('media');
+                if (event.oldVersion < this.DB_VERSION) {
+                    if (db.objectStoreNames.contains('quests')) {
+                        db.deleteObjectStore('quests');
+                    }
+
+                    if (db.objectStoreNames.contains('questAssets')) {
+                        db.deleteObjectStore('questAssets');
+                    }
                 }
             
-                db.createObjectStore('media', { keyPath: 'path' });
+                db.createObjectStore('quests', {keyPath: 'questID'});
+                db.createObjectStore('questAssets', { keyPath: 'path' });
             }
         });        
     }
@@ -58,29 +65,72 @@ class QuestDB {
             })();          
         });
     }
-      
-      
 
-    checkMediaExists(mediaPath) {
+
+
+    getQuest(questID) {
         return new Promise((RESOLVE, REJECT) => {
-            const mediaObjectStore = this.mediaDB.transaction('media').objectStore('media');
-            const request = mediaObjectStore.get(mediaPath);
+            const questObjectStore = this.db.transaction('quests').objectStore('quests');
+  
+            const request = questObjectStore.get(questID);
         
             request.onerror = (event) => {
-                REJECT('Error reading media');
+                REJECT('Error reading quests');
             };
         
             request.onsuccess = (event) => {
-                RESOLVE(request.result != undefined);
+                RESOLVE(request.result);
             };
         });
     }
 
 
-    getMedia(mediaPath) {
+
+
+
+    addQuest(newQuest) {
         return new Promise((RESOLVE, REJECT) => {
-            const mediaObjectStore = this.mediaDB.transaction('media').objectStore('media');
-            const request = mediaObjectStore.get(mediaPath);
+            const questTransaction = this.db.transaction(["quests"], "readwrite");
+            let dbQuest = {questID: newQuest.questID, name: newQuest.name, assetsFolder: newQuest.assetsFolder, downloadedVersion: null, questJSON: null};
+
+            questTransaction.oncomplete = (event) => {
+              RESOLVE(dbQuest);
+            };
+            const questsObjectStore = questTransaction.objectStore('quests');
+            questsObjectStore.add(dbQuest);
+        });
+    }
+    
+    
+
+    async updateQuestJSON(newQuest) {
+        const response = await fetch('assets/quests/' + newQuest.assetsFolder + '/quest.json');
+        const questJSON = await response.json();
+        const dbQuest = await this.getQuest(newQuest.questID);
+        dbQuest.questJSON = questJSON;
+        const questObjectStore = this.db.transaction('quests', 'readwrite').objectStore('quests');
+        const request = await questObjectStore.put(dbQuest);
+
+        return dbQuest;
+    }
+    
+    
+
+    async updateQuestVersion(newQuest) {
+        const dbQuest = await this.getQuest(newQuest.questID);
+        dbQuest.downloadedVersion = newQuest.version;
+        const questObjectStore = this.db.transaction('quests', 'readwrite').objectStore('quests');
+        const request = await questObjectStore.put(dbQuest);
+
+        return dbQuest;
+    }
+    
+
+
+    async getAsset(path) {
+        return new Promise((RESOLVE, REJECT) => {
+            const assetObjectStore = this.db.transaction('questAssets').objectStore('questAssets');
+            const request = assetObjectStore.get(path);
         
             request.onerror = (event) => {
                 REJECT('Error reading media');
@@ -93,26 +143,33 @@ class QuestDB {
     }
 
 
-    addMedia(mediaPath) {
+    async updateAsset(questID, path) {
+        const response = await fetch(path);
+        const blob = await response.blob();
+        const assetObjectStore = this.db.transaction('questAssets', 'readwrite').objectStore('questAssets');
+        const dbResponse = await assetObjectStore.put({path: path, questID: questID, blob: blob});
+
+        return path;
+        /*
         return new Promise((RESOLVE, REJECT) => {
-            const mediaRequest = fetch(mediaPath).then(response => response.blob());
-
+            const mediaRequest = fetch(path).then(response => response.blob());
             mediaRequest.then(blob => {
-                const mediaObjectStore = this.mediaDB.transaction('media', 'readwrite').objectStore('media');
-                mediaObjectStore.add({path: mediaPath, blob: blob});
+                console.log('got ' + path);
+                const mediaObjectStore = this.db.transaction('questAssets', 'readwrite').objectStore('questAssets');
+                mediaObjectStore.add({path: path, questID: questID, blob: blob});
 
-                RESOLVE(mediaPath + ' added to db.');
+                RESOLVE(path);
             });
-        });
+        });*/
     }
 
 
-
+/*
     listContents() {
         return new Promise((RESOLVE, REJECT) => {
             let contents = '';
     
-            const mediaObjectStore = this.mediaDB.transaction('media').objectStore('media');
+            const mediaObjectStore = this.db.transaction('media').objectStore('media');
             let allRecords = mediaObjectStore.getAll();
             allRecords.onsuccess = function() {
                 for(let index = 0; index < allRecords.result.length; index++) {
@@ -122,5 +179,5 @@ class QuestDB {
                 RESOLVE(contents);
             };
         });            
-    }
+    }*/
 };
