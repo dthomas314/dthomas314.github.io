@@ -25,22 +25,33 @@
     </script>
   </head>
   <body>
-    <h1>Treasure Quest</h1>
-    <div id="menu"></div>
-    <div id="canvas"></div>
-    <div id="debug" style="display:none;"></div>
-    <div id="downloadStatus" style="display:none;"></div>
+    <div class="container-fluid header" style="margin:0px;">
+      <h1>Treasure Quest</h1>
+    </div>
+    <div id="main-content">
+      <div id="menuArea">
+        <h2>Quests</h2>
+        <div id="menuCanvas"></div>
+      </div>
+      <div id="questArea">
+        <h2 id="questName"></h2>
+        <div id="canvas"></div>
+      </div>      
+      <div id="debug" style="display:none;"></div>
+      <div id="downloadStatus" style="display:none;"></div>
+    </div>
     <nav class="navbar fixed-bottom navbar-expand navbar-dark bg-dark">
       <div class="container-fluid">
           <div class="collapse navbar-collapse" id="navbarCollapse">
               <ul class="navbar-nav">
                   <li class="nav-item">
-                      <a class="btn btn-primary" href="javascript:" onclick="resetQuest();">Start Over</a>
-                      <a class="btn btn-primary" href="javascript:" onclick="showDownloads();">Download Status (1 of 100)</a>                      
+                      <a id="allQuestsBtn" class="btn btn-primary" href="javascript:" onclick="loadAllQuests();">All Quests</a>
+                      <a id="restartQuestBtn" class="btn btn-primary" href="javascript:" onclick="resetQuest();">Restart Quest</a>
+                      <a id="checkDBBtn" class="btn btn-primary" href="javascript:" onclick="checkDB();">Check DB</a>                      
                   </li>                  
               </ul>
           </div>
-          <div class="text-end" style="color:#555555;">Version 2.0.25</div>
+          <div class="text-end" style="color:#555555;">Version 2.0.26</div>
       </div>
     </nav>
     <script src="quest.js" defer></script>

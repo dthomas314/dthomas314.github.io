@@ -7,18 +7,27 @@ const FAILURE_SOUND = new Audio('assets/failure.mp3');
 const questDB = new QuestDB();
 let gAllQuests = new QuestCollection();
 let gQuest = {};
+let gCurrentQuestID = 0;
 let gCurrentStep = 0;
 let gTimerInterval = null;
 let gTimerEnd = null;
 
 
 function initialize() {
-  if(TEST_MODE)
+  if(TEST_MODE) {
     DEBUG_AREA.style.display = 'block';
+    DEBUG_AREA.innerText = "TODO: Refactor";
+  }
 
   questDB.connect()
   .then((message) => {
-    loadAllQuests();
+    let questID = getCurrentQuest();
+
+    if(questID) {
+      playQuest(questID);
+    } else {
+      loadAllQuests();
+    }
   })
   .catch((error) => {
     alert(`Unable to connect to database: ${error}`);
@@ -28,6 +37,18 @@ function initialize() {
 
 
 function loadAllQuests() {
+  let menuArea = document.querySelector('#menuArea');
+  let menuCanvas = document.querySelector('#menuCanvas');
+  let questArea = document.querySelector('#questArea');
+  let restartQuestBtn = document.querySelector('#restartQuestBtn');
+
+  menuArea.style.display = 'block';
+  menuCanvas.innerHTML = '';
+  questArea.style.display = 'none';
+  restartQuestBtn.style.display = 'none';
+
+  setCurrentQuest(null);
+
   fetch("quests.json")
   .then((res) => {
       if (!res.ok) {
@@ -38,8 +59,6 @@ function loadAllQuests() {
   })
   .then((data) => {   
     gAllQuests.quests = data.quests;
-    let menu = document.querySelector('#menu');
-    menu.innerHTML = '';
 
     for(let questIndex = 0; questIndex < gAllQuests.quests.length; questIndex++) {
       questDB.getQuest(gAllQuests.quests[questIndex].questID)
@@ -65,15 +84,18 @@ function loadAllQuests() {
 
 
 function addQuestToMenu(newQuest, dbQuest) {
-  let menu = document.querySelector('#menu');
+  let menuCanvas = document.querySelector('#menuCanvas');;
   let menuElement = document.createElement('div');
+  menuElement.classList.add('row');
 
-  let nameElement = document.createElement('span');
+  let nameElement = document.createElement('div');
+  nameElement.classList.add('col-3');
+  nameElement.classList.add('questName');  
   nameElement.innerText = newQuest.name;
   menuElement.appendChild(nameElement);
   
-  let statusElement = document.createElement('span');
-  statusElement.style.marginLeft = "10px";
+  let statusElement = document.createElement('div');
+  statusElement.classList.add('col-3');
   let needDownload = true;  
   let canPlay = false;
    
@@ -92,9 +114,10 @@ function addQuestToMenu(newQuest, dbQuest) {
   }
   menuElement.appendChild(statusElement);
 
+  let downloadElement = document.createElement('div');
+  downloadElement.classList.add('col-3');
   if(needDownload) {
-    let downloadButton = document.createElement('a');
-    downloadButton.style.marginLeft = "10px";
+    let downloadButton = document.createElement('a');    
     downloadButton.href = 'javascript:';
     downloadButton.addEventListener('click', function() {
       downloadQuest(newQuest.questID);
@@ -102,9 +125,12 @@ function addQuestToMenu(newQuest, dbQuest) {
     downloadButton.innerText = 'Download';
     downloadButton.classList.add('btn');
     downloadButton.classList.add('btn-secondary');
-    menuElement.appendChild(downloadButton);
+    downloadElement.appendChild(downloadButton);
   }
+  menuElement.appendChild(downloadElement);
 
+  let playElement = document.createElement('div');
+  playElement.classList.add('col-3');  
   if(canPlay) {
     let playButton = document.createElement('a');
     playButton.style.marginLeft = "10px";
@@ -112,13 +138,17 @@ function addQuestToMenu(newQuest, dbQuest) {
     playButton.addEventListener('click', function() {
       playQuest(newQuest.questID);
     });
-    playButton.innerText = 'Play';
+    if(dbQuest.currentStep > 0)
+      playButton.innerText = 'Resume';
+    else
+      playButton.innerText = 'Play';
     playButton.classList.add('btn');
     playButton.classList.add('btn-primary');
-    menuElement.appendChild(playButton);
+    playElement.appendChild(playButton);
   }
+  menuElement.appendChild(playElement);
 
-  menu.appendChild(menuElement);
+  menuCanvas.appendChild(menuElement);
 }
 
 
@@ -153,17 +183,25 @@ async function downloadQuest(questID) {
 
 
 async function playQuest(questID) {
+  let menuArea = document.querySelector('#menuArea');
+  let questArea = document.querySelector('#questArea');
   let canvas = document.querySelector('#canvas');
-  let menu = document.querySelector('#menu');
+  let restartQuestBtn = document.querySelector('#restartQuestBtn');
+  let questName = document.querySelector('#questName');
 
-  canvas.style.display = 'block';
-  menu.style.display = 'none';
+  menuArea.style.display = 'none';
+  questArea.style.display = 'block';
+  restartQuestBtn.style.display = 'inline';
+
+  gCurrentQuestID = questID;
+  setCurrentQuest(gCurrentQuestID);
 
   let dbQuest = await questDB.getQuest(questID);
-
   gQuest = dbQuest.questJSON;
 
-  restoreQuestState();
+  questName.innerText = dbQuest.name;
+  gCurrentStep = dbQuest.currentStep;
+
   drawCurrentStep();
 }
 
@@ -444,19 +482,24 @@ function isCloseEstimate(checkPosition, destination) {
 
 
 
-function saveQuestState() {
-  const questState = {step: gCurrentStep};
-
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(questState));
+async function saveQuestState() {
+  await questDB.updateQuestStep(gCurrentQuestID, gCurrentStep);
 }
 
 
 
-function restoreQuestState() {
+function getCurrentQuest() {
   const data = window.localStorage.getItem(STORAGE_KEY);
-  const questState = data ? JSON.parse(data) : {step: 0};
+  const questState = data ? JSON.parse(data) : {questID: null};
 
-  gCurrentStep = questState.step;
+  return questState.questID;
+}
+
+
+
+function setCurrentQuest(questID) {
+  const questState = {questID: questID};
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(questState));
 }
 
 
@@ -470,12 +513,12 @@ function stopTimer() {
 
 
 
-function showDownloads() {
+function checkDB() {
+  document.querySelector('#downloadStatus').innerHTML = '';
 
-    questDB.listContents().then((contents) => {
-      document.querySelector('#downloadStatus').innerHTML += contents;
-    });
-
+  questDB.listContents().then((contents) => {
+    document.querySelector('#downloadStatus').innerHTML += contents;
+  });
 
   document.querySelector('#downloadStatus').style.display = 'block';
 }

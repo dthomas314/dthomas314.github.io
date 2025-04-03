@@ -91,7 +91,7 @@ class QuestDB {
     addQuest(newQuest) {
         return new Promise((RESOLVE, REJECT) => {
             const questTransaction = this.db.transaction(["quests"], "readwrite");
-            let dbQuest = {questID: newQuest.questID, name: newQuest.name, assetsFolder: newQuest.assetsFolder, downloadedVersion: null, questJSON: null};
+            let dbQuest = {questID: newQuest.questID, name: newQuest.name, assetsFolder: newQuest.assetsFolder, downloadedVersion: null, questJSON: null, currentStep: 0};
 
             questTransaction.oncomplete = (event) => {
               RESOLVE(dbQuest);
@@ -119,6 +119,17 @@ class QuestDB {
     async updateQuestVersion(newQuest) {
         const dbQuest = await this.getQuest(newQuest.questID);
         dbQuest.downloadedVersion = newQuest.version;
+        const questObjectStore = this.db.transaction('quests', 'readwrite').objectStore('quests');
+        const request = await questObjectStore.put(dbQuest);
+
+        return dbQuest;
+    }
+    
+    
+
+    async updateQuestStep(questID, step) {
+        const dbQuest = await this.getQuest(questID);
+        dbQuest.currentStep = step;
         const questObjectStore = this.db.transaction('quests', 'readwrite').objectStore('quests');
         const request = await questObjectStore.put(dbQuest);
 
@@ -164,20 +175,48 @@ class QuestDB {
     }
 
 
-/*
+
     listContents() {
         return new Promise((RESOLVE, REJECT) => {
             let contents = '';
-    
-            const mediaObjectStore = this.db.transaction('media').objectStore('media');
-            let allRecords = mediaObjectStore.getAll();
-            allRecords.onsuccess = function() {
-                for(let index = 0; index < allRecords.result.length; index++) {
-                    contents += allRecords.result[index].path + '<br />';
+            let storeNames = this.db.objectStoreNames;
+            let storeCountProcessed = 0;
+
+            if(storeNames.length == 0) {
+                RESOLVE('');
+            } else {
+                for(let objectIndex = 0; objectIndex < storeNames.length; objectIndex++) {
+                    let storeName = storeNames[objectIndex];
+
+                    const objectStore = this.db.transaction(storeName).objectStore(storeName);
+                    let allRecords = objectStore.getAll();
+
+                    allRecords.onsuccess = function(event) {
+                        contents += '<h3>' + event.target.source.name + '</h3>';
+                        if(event.target.result.length == 0) {
+                            contents += '<div>no records</div>';
+                        } else {
+                            contents += '<table border="1"><tr>';
+                            for (const key in event.target.result[0]) {
+                               contents += '<th style="border-width:1px;">' + key + '</th>' ;
+                            }
+                            contents += '</tr>';
+                            for(let index = 0; index < event.target.result.length; index++) {
+                                contents += '<tr>';
+                                for (const key in event.target.result[index]) {
+                                    contents += '<td style="border-width:1px;">' + event.target.result[index][key] + '</td>' ;
+                                }
+                                contents += '</tr>';
+                            }
+                            contents += '</table>';
+                        }
+
+                        storeCountProcessed++;
+                        if(storeCountProcessed == storeNames.length)
+                            RESOLVE(contents);
+                    };                
                 }
-                console.log(contents);
-                RESOLVE(contents);
-            };
+            }
         });            
-    }*/
+    }
 };

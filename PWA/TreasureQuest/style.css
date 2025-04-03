@@ -1,13 +1,15 @@
-body {
-  margin: 1vh 1vw;
-  background-color: #efe;
-}
-
-.questStep {margin:20px;padding:20px;border:1px solid black;background-color:white;}
+body {margin:0px;padding:0px;background-color: #efe;}
+.header {background-color:black;color:white;text-align:center;}
+#main-content {margin: 1vh 1vw;}
 #debug {border:1px solid red;background-color:white;padding:20px;}
 #downloadStatus {border:1px solid red;background-color:white;padding:20px;}
+.testButton{display:block;margin-top:10px;}
+
+/* All Quests Menu */
+#menuCanvas .questName {font-weight:bold;}
+
+/* Individual Quest */
+.questStep {margin:20px;padding:20px;border:1px solid black;background-color:white;}
 .directions {margin:0px 0px 20px 0px;}
 .timer {margin-left:auto;margin-right:auto;color:red;font-family:'Courier New';font-size:30pt;}
 .error {color:red;}
-
-.testButton{display:block;margin-top:10px;}
