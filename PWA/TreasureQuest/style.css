@@ -1,3 +1,4 @@
+.sr-only {position: absolute;width: 1px;height: 1px;padding: 0;margin: -1px;overflow: hidden;clip: rect(0, 0, 0, 0);white-space: nowrap;border: 0;}
 body {margin:0px;padding:0px;background-color: #efe;}
 .header {background-color:black;color:white;text-align:center;}
 #main-content {margin: 1vh 1vw;}
@@ -5,8 +6,17 @@ body {margin:0px;padding:0px;background-color: #efe;}
 #downloadStatus {border:1px solid red;background-color:white;padding:20px;}
 .testButton{display:block;margin-top:10px;}
 
+/* Mobile device adjustments */
+@media only screen and (max-width: 600px) {
+  .fixed-bottom { padding-bottom:20px !important;} /* add padding for iPhone home indicator */
+}
+
 /* All Quests Menu */
-#menuCanvas .questName {font-weight:bold;}
+#menuCanvas .card {width:18rem;}
+@media only screen and (max-width: 600px) {
+  #menuCanvas .card {width:100%;}
+}
+
 
 /* Individual Quest */
 .questStep {margin:20px;padding:20px;border:1px solid black;background-color:white;}

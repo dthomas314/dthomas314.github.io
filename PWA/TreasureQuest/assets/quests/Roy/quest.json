@@ -50,7 +50,7 @@
         },
         {
             "type": "location",
-            "directions": "It looks like Roy may have left you a clue:<br /><img src=\"assets/quests/Roy/map-sketch.png\" class=\"img-fluid\" style=\"max-width:400px;\">",
+            "directions": "It looks like Roy may have left you a clue:<div style=\"max-width:600px;\"><img src=\"assets/quests/Roy/map-sketch.png\" class=\"img-fluid\"></div>",
             "note": "Along sidewalk trail",
             "destination": {"coords": {"latitude":43.57081754055886, "longitude":-116.13901578569262}, "proximityMeters": 20},
             "button": "OK"
