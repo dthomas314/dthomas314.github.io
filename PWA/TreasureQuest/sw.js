@@ -7,14 +7,13 @@ const CACHE_NAME = `treasure-quest-${VERSION}`;
 // The static resources that the app needs to function.
 const APP_STATIC_RESOURCES = [
   "/PWA/TreasureQuest/",
-  "/PWA/TreasureQuest/index.html",
   "/PWA/TreasureQuest/app.js",
+  "/PWA/TreasureQuest/index.html",
   "/PWA/TreasureQuest/quest.js",
   "/PWA/TreasureQuest/questDB.js",
   "/PWA/TreasureQuest/quests.json",
   "/PWA/TreasureQuest/style.css",
   "/PWA/TreasureQuest/icons/icon.svg",
-  "/PWA/TreasureQuest/quests/test.json",
   "/PWA/TreasureQuest/assets/failure.mp3",
   "/PWA/TreasureQuest/assets/success.mp3",  
   "/PWA/TreasureQuest/bootstrap/bootstrap.min.css",
