@@ -14,7 +14,6 @@
         {
             "type": "question",
             "directions": "Are you willing to spend a little money to save Roy's life?",
-            "destination": {"coords": {"latitude":43.57418178252678, "longitude":-116.154888666378}, "proximityMeters": 50},
             "input": "dropdown",
             "initialOption": {"text":"--pick your option--", "value": ""},
             "options": [{"text": "YES", "value": "YES"}, {"text": "NO", "value": "NO"}],
@@ -30,7 +29,7 @@
         {
             "type": "timed",
             "directions": "Find an inconspicuous seat in the back and order some food. Someone will contact you in 15 minutes.",
-            "timer": {"minutes": 0, "seconds": 10},
+            "timer": {"minutes": 15, "seconds": 0},
             "alert": "Authorization Code: 9337",
             "button": "Proceed"
         },

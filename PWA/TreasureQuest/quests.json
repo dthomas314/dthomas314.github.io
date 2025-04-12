@@ -3,13 +3,15 @@
         {
             "questID": 1,
             "name": "Save Roy Kent",
+            "location": "Boise",
             "assetsFolder": "Roy",
             "version": 3
         },
         {
             "questID": 2,
-            "name": "Fake",
-            "assetsFolder": "fake one",
+            "name": "Where is Joe Vandal",
+            "location": "Moscow",
+            "assetsFolder": "JoeVandal",
             "version": 1
         }
     ]

@@ -1,0 +1,57 @@
+{
+    "steps":[
+        {
+            "type": "message",
+            "directions": "Joe Vandal needs your help!<br />He has gone missing while training in Moscow. Please hurry!",
+            "button": "HELP JOE"
+        },
+        {
+            "type": "location",
+            "directions": "The last location of Joe's phone was in front of the UI Law Library. Get over there and pick up his trail.",
+            "destination": {"coords": {"latitude":46.728190266399814, "longitude":-117.01528223597883}, "proximityMeters": 30},
+            "button": "Proceed"
+        },
+        {
+            "type": "location",
+            "directions": "Look here! You found a strange note:<br ><img src=\"assets/quests/JoeVandal/ransom.png\" class=\"img-fluid\"><br /><br /><strong>Get there!</strong>",
+            "destination": {"coords": {"latitude":46.72510797028906, "longitude":-117.01552997424483}, "proximityMeters": 50},
+            "button": "Now what?"
+        },
+        {
+            "type": "timed",
+            "directions": "Find an inconspicuous place to wait without drawing any unnecessary attention. Someone will contact you in a few minutes.",
+            "timer": {"minutes": 4, "seconds": 0},
+            "alert": "Authorization Code: 8401",
+            "button": "Proceed"
+        },
+        {
+            "type": "question",
+            "directions": "Enter your Authorization Code to continue:",
+            "input": "text",
+            "button": "Check",
+            "answer": "8401"
+        },
+        {
+            "type": "location",
+            "directions": "<video width=\"320\" height=\"240\" controls><source src=\"assets/quests/JoeVandal/video1.mp4\" type=\"video/mp4\">Your browser does not support videos</video>",
+            "note": "Golf course parking",
+            "destination": {"coords": {"latitude":46.72338622046903, "longitude":-117.01589575959338}, "proximityMeters": 50},
+            "button": "OK"
+        },
+        {
+            "type": "location",
+            "directions": "It looks like Joe may have left you a clue:<div style=\"max-width:600px;\"><img src=\"assets/quests/JoeVandal/map-sketch.png\" class=\"img-fluid\"></div>",
+            "note": "In arboretum",
+            "destination": {"coords": {"latitude":46.718958602624554, "longitude":-117.01671156013045}, "proximityMeters": 20},
+            "button": "OK"
+        },
+        {
+            "type": "location",
+            "directions": "<audio controls><source src=\"assets/quests/JoeVandal/helo-audio.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
+            "note": "Barn",
+            "destination": {"coords": {"latitude":46.714613443397965, "longitude":-117.0178550716102}, "proximityMeters": 50},
+            "countdown": {"minutes": 3, "seconds": 30},
+            "button": "OK"
+        }
+    ]
+}

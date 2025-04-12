@@ -1,4 +1,4 @@
-const TEST_MODE = false;
+const TEST_MODE = true;
 const DEBUG_AREA = document.querySelector('#debug');
 const STORAGE_KEY = "treasure-quest";
 const SUCCESS_SOUND = new Audio('assets/success.mp3');
@@ -18,7 +18,7 @@ function initialize() {
     DEBUG_AREA.style.display = 'block';
     DEBUG_AREA.innerText = "TODO: Refactor";
     let checkDBBtn = document.querySelector('#checkDBBtn');
-    checkDBBtn.sytle.display = 'block';    
+    checkDBBtn.style.display = 'inline';    
   }
 
   questDB.connect()
@@ -96,6 +96,9 @@ function addQuestToMenu(newQuest, dbQuest) {
   nameElement.classList.add('card-title');  
   nameElement.innerText = newQuest.name;
   cardBodyElement.appendChild(nameElement);
+  let locationElement = document.createElement('div');
+  locationElement.innerText = "Location: " + newQuest.location;
+  cardBodyElement.appendChild(locationElement);
   
   let statusElement = document.createElement('div');
   statusElement.classList.add('card-text');
@@ -104,7 +107,7 @@ function addQuestToMenu(newQuest, dbQuest) {
    
 
   if(dbQuest.downloadedVersion === null) {
-    statusElement.innerText = "Status: not installed";
+    statusElement.innerText = "Status: not downloaded";
   } else {
     if(dbQuest.downloadedVersion === newQuest.version) {
       statusElement.innerText = "Status: current";
@@ -537,6 +540,13 @@ function startProcessingDownload(btn) {
   btn.parentNode.appendChild(loadingSpinner);  
 }
 
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  //installPrompt = event;
+  //installButton.removeAttribute("hidden");
+  DEBUG_AREA.innerText += 'installable';
+});
 
 
 initialize();
