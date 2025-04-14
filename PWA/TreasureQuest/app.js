@@ -21,6 +21,10 @@ function initialize() {
     checkDBBtn.style.display = 'inline';    
   }
 
+  if (isIos() && !isInStandaloneMode()) {
+    document.querySelector('#iosInstall').style.display = 'block';
+  }  
+
   questDB.connect()
   .then((message) => {
     let questID = getCurrentQuest();
@@ -541,25 +545,19 @@ function startProcessingDownload(btn) {
 }
 
 
-
+/*
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   //installPrompt = event;
   //installButton.removeAttribute("hidden");
   DEBUG_AREA.innerText += 'beforeinstallprompt->installable';
-}); 
+});*/
 const isIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
   return /iphone|ipad|ipod/.test( userAgent );
 }
 // Detects if device is in standalone mode
 const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-
-DEBUG_AREA.innerText += `ios: ${isIos()}.`;
-// Checks if should display install popup notification:
-if (isIos() && !isInStandaloneMode()) {
-  DEBUG_AREA.innerText += 'ios - installable';
-}
 
 
 initialize();
