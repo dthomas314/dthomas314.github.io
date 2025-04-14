@@ -16,7 +16,7 @@ let gTimerEnd = null;
 function initialize() {
   if(TEST_MODE) {
     DEBUG_AREA.style.display = 'block';
-    DEBUG_AREA.innerText = "TODO: Refactor";
+    DEBUG_AREA.innerText += "TODO: Refactor";
     let checkDBBtn = document.querySelector('#checkDBBtn');
     checkDBBtn.style.display = 'inline';    
   }
@@ -541,13 +541,13 @@ function startProcessingDownload(btn) {
 }
 
 
-/*
+
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   //installPrompt = event;
   //installButton.removeAttribute("hidden");
-  DEBUG_AREA.innerText += 'installable';
-}); */
+  DEBUG_AREA.innerText += 'beforeinstallprompt->installable';
+}); 
 const isIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
   return /iphone|ipad|ipod/.test( userAgent );
@@ -555,6 +555,7 @@ const isIos = () => {
 // Detects if device is in standalone mode
 const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
 
+DEBUG_AREA.innerText += `ios: ${isIos()}.`;
 // Checks if should display install popup notification:
 if (isIos() && !isInStandaloneMode()) {
   DEBUG_AREA.innerText += 'ios - installable';
