@@ -376,6 +376,7 @@ async function drawCurrentStep() {
             gDestinationBearing = getBearing(position.coords.latitude, position.coords.longitude, currentStep.destination.coords.latitude, currentStep.destination.coords.longitude);
             DEBUG_AREA.innerHTML += '<div>Bearing: ' + gDestinationBearing + '</div>';
             DEBUG_AREA.innerHTML += '<div>Device Heading: ' + gCompassHeading + '</div>';
+            DEBUG_AREA.innerHTML += '<div>Declination: ' + gQuest.declination + '</div>';            
             let rotation = parseInt(gDestinationBearing - gCompassHeading - COMPASS_DEFAULT_ROTATION);
             document.querySelector('#navArrow').style.transform = `rotate(${rotation}deg)`;
 
