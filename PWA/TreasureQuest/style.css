@@ -5,6 +5,8 @@ body {margin:0px;padding:0px;background-color: #efe;}
 #debug {border:1px solid red;background-color:white;padding:20px;}
 #downloadStatus {border:1px solid red;background-color:white;padding:20px;}
 .testButton{display:block;margin-top:10px;}
+#iosInstall {position:absolute;bottom:10px;z-index:1050;width:100%;}
+#iosInstall::after {content: " ";position: absolute;top: 100%; /* At the bottom of the tooltip */left: 50%;margin-left: -20px;border-width: 20px;border-style: solid;border-color: rgb(158, 197, 254) transparent transparent transparent;}
 
 /* Mobile device adjustments */
 @media only screen and (max-width: 600px) {
