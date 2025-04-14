@@ -3,6 +3,7 @@ const DEBUG_AREA = document.querySelector('#debug');
 const STORAGE_KEY = "treasure-quest";
 const SUCCESS_SOUND = new Audio('assets/success.mp3');
 const FAILURE_SOUND = new Audio('assets/failure.mp3');
+const COMPASS_DEFAULT_ROTATION = 90;
 
 const questDB = new QuestDB();
 let gAllQuests = new QuestCollection();
@@ -11,6 +12,8 @@ let gCurrentQuestID = 0;
 let gCurrentStep = 0;
 let gTimerInterval = null;
 let gTimerEnd = null;
+let gDestinationBearing = 0;
+let gCompassHeading = 0;
 
 
 function initialize() {
@@ -369,7 +372,13 @@ async function drawCurrentStep() {
                           '(' + Date.now() + ')';
 
             locationError.style.display = 'none';
-            //if (isCloseEstimate(position, currentStep.destination)) {
+
+            gDestinationBearing = getBearing(position.coords.latitude, position.coords.longitude, currentStep.destination.coords.latitude, currentStep.destination.coords.longitude);
+            DEBUG_AREA.innerHTML += '<div>Bearing: ' + gDestinationBearing + '</div>';
+            DEBUG_AREA.innerHTML += '<div>Device Heading: ' + gCompassHeading + '</div>';
+            let rotation = parseInt(gDestinationBearing - gCompassHeading - COMPASS_DEFAULT_ROTATION);
+            document.querySelector('#navArrow').style.transform = `rotate(${rotation}deg)`;
+
             if (isCloseEstimate(position, currentStep.destination)) {
               if(arrived.style.display !== 'block') SUCCESS_SOUND.play();
 
@@ -486,6 +495,36 @@ function isCloseEstimate(checkPosition, destination) {
 
 
 
+function toRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+
+
+function toDegrees(radians) {
+  return radians * 180 / Math.PI;
+}
+
+
+
+function getBearing(startLat, startLng, destLat, destLng) {
+  startLat = toRadians(startLat);
+  startLng = toRadians(startLng);
+  destLat = toRadians(destLat);
+  destLng = toRadians(destLng);
+
+  const y = Math.sin(destLng - startLng) * Math.cos(destLat);
+  const x = Math.cos(startLat) * Math.sin(destLat) -
+            Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+  const bearingRad = Math.atan2(y, x);
+  const bearingDeg = toDegrees(bearingRad);
+
+  return (bearingDeg + 360) % 360;
+}
+
+
+
+
 async function saveQuestState() {
   await questDB.updateQuestStep(gCurrentQuestID, gCurrentStep);
 }
@@ -543,6 +582,19 @@ function startProcessingDownload(btn) {
   loadingSpinner.appendChild(loadingReader);
   btn.parentNode.appendChild(loadingSpinner);  
 }
+
+
+
+window.addEventListener('deviceorientation', handleOrientation, true);
+
+function handleOrientation(event) {
+  const alpha = event.alpha || event.webkitCompassHeading;
+
+  if (alpha !== null && alpha !== undefined) {
+    gCompassHeading = 360 - alpha;
+  }
+}
+
 
 
 /*

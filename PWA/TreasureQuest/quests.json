@@ -4,6 +4,7 @@
             "questID": 1,
             "name": "Save Roy Kent",
             "location": "Boise",
+            "declination": 15,
             "assetsFolder": "Roy",
             "version": 3
         },
@@ -11,6 +12,7 @@
             "questID": 2,
             "name": "Where is Joe Vandal",
             "location": "Moscow",
+            "declination": 13,
             "assetsFolder": "JoeVandal",
             "version": 1
         }
