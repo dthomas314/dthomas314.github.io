@@ -218,7 +218,10 @@ async function playQuest(questID) {
 async function drawCurrentStep() {
   let rootURL = window.location.protocol + '//' + window.location.host;
   let canvas = document.querySelector('#canvas');
+  let navBox = document.querySelector('#navBox')
+
   canvas.innerHTML = '';
+  navBox.style.display = 'none';
 
   if(gCurrentStep < 0) {
     gCurrentStep = 0;
@@ -340,6 +343,8 @@ async function drawCurrentStep() {
         break;
       case 'location':
         let watchID = null;
+
+        navBox.style.display = 'block';
 
         //Block for displaying location errors
         let locationError = document.createElement('div');
@@ -588,19 +593,25 @@ function startProcessingDownload(btn) {
 
 let startCompass = document.querySelector('#startCompass');
 startCompass.addEventListener("click", () => {
+  let useCompass = false;
+  startCompass.style.display = 'none';
   if (isIos()) {
     DeviceOrientationEvent.requestPermission()
       .then((response) => {
         if (response === "granted") {
-          window.addEventListener("deviceorientation", handleOrientation, true);
-        } else {
-          alert("has to be allowed!");
+          useCompass = true;
         }
-      })
-      .catch(() => alert("not supported"));
+      });
   } else {
+    useCompass = true;
+  }
+
+  if(useCompass) {
+    document.querySelector('#navCompass').style.display = 'block';
     window.addEventListener("deviceorientationabsolute", handleOrientation, true);
-  }  
+  } else {
+    document.querySelector('#noCompass').style.display = 'block';
+  }
 });
 
 
