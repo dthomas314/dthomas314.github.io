@@ -593,26 +593,32 @@ function startProcessingDownload(btn) {
 
 let startCompass = document.querySelector('#startCompass');
 startCompass.addEventListener("click", () => {
-  let useCompass = false;
   startCompass.style.display = 'none';
   if (isIos()) {
     DeviceOrientationEvent.requestPermission()
       .then((response) => {
         if (response === "granted") {
-          useCompass = true;
+          setupCompass(true);
+        } else {
+          setupCompass(false);
         }
-      });
+      })
+      .catch(() => setupCompass(false));
   } else {
-    useCompass = true;
+    setupCompass(true);
   }
+});
 
+
+
+function setupCompass(useCompass) {
   if(useCompass) {
     document.querySelector('#navCompass').style.display = 'block';
     window.addEventListener("deviceorientationabsolute", handleOrientation, true);
   } else {
     document.querySelector('#noCompass').style.display = 'block';
-  }
-});
+  }  
+}
 
 
 
