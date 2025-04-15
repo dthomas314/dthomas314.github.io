@@ -597,24 +597,24 @@ startCompass.addEventListener("click", () => {
   if (isIos()) {
     DeviceOrientationEvent.requestPermission()
       .then((response) => {
-        if (response === "granted") {
-          setupCompass(true);
+        if (response === 'granted') {
+          setupCompass('deviceorientation');
         } else {
-          setupCompass(false);
+          setupCompass('');
         }
       })
-      .catch(() => setupCompass(false));
+      .catch(() => setupCompass(''));
   } else {
-    setupCompass(true);
+    setupCompass('deviceorientationabsolute');
   }
 });
 
 
 
-function setupCompass(useCompass) {
-  if(useCompass) {
+function setupCompass(compassEvent) {
+  if(compassEvent !== '') {
     document.querySelector('#navCompass').style.display = 'block';
-    window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+    window.addEventListener(compassEvent, handleOrientation, true);
   } else {
     document.querySelector('#noCompass').style.display = 'block';
   }  
