@@ -586,7 +586,24 @@ function startProcessingDownload(btn) {
 
 
 
-window.addEventListener('deviceorientation', handleOrientation, true);
+let startCompass = document.querySelector('#startCompass');
+startCompass.addEventListener("click", () => {
+  if (isIos()) {
+    DeviceOrientationEvent.requestPermission()
+      .then((response) => {
+        if (response === "granted") {
+          window.addEventListener("deviceorientation", handleOrientation, true);
+        } else {
+          alert("has to be allowed!");
+        }
+      })
+      .catch(() => alert("not supported"));
+  } else {
+    window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+  }  
+});
+
+
 
 function handleOrientation(event) {
   const alpha = event.alpha || event.webkitCompassHeading;
