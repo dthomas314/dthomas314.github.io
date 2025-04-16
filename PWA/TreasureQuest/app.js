@@ -626,7 +626,8 @@ function handleOrientation(event) {
   const compassHeading = event.webkitCompassHeading;
 
   if (compassHeading !== null && compassHeading !== undefined) {
-    gCompassHeading = 360 - compassHeading;
+    //gCompassHeading = 360 - compassHeading;
+    gCompassHeading = compassHeading;
   }
 }
 
