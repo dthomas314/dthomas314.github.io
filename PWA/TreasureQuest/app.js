@@ -382,7 +382,7 @@ async function drawCurrentStep() {
             DEBUG_AREA.innerHTML += '<div>Bearing: ' + gDestinationBearing + '</div>';
             DEBUG_AREA.innerHTML += '<div>Device Heading: ' + gCompassHeading + '</div>';
             DEBUG_AREA.innerHTML += '<div>Declination: ' + gQuest.declination + '</div>';            
-            let rotation = parseInt(gDestinationBearing - gCompassHeading - COMPASS_DEFAULT_ROTATION);
+            let rotation = parseInt(gDestinationBearing - gCompassHeading - COMPASS_DEFAULT_ROTATION + gQuest.declination);
             document.querySelector('#navArrow').style.transform = `rotate(${rotation}deg)`;
 
             if (isCloseEstimate(position, currentStep.destination)) {

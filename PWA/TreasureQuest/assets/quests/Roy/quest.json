@@ -1,4 +1,5 @@
 {
+    "declination": 15,
     "steps":[
         {
             "type": "message",
