@@ -623,10 +623,10 @@ function setupCompass(compassEvent) {
 
 
 function handleOrientation(event) {
-  const alpha = event.alpha || event.webkitCompassHeading;
+  const compassHeading = event.webkitCompassHeading;
 
-  if (alpha !== null && alpha !== undefined) {
-    gCompassHeading = 360 - alpha;
+  if (compassHeading !== null && compassHeading !== undefined) {
+    gCompassHeading = 360 - compassHeading;
   }
 }
 
