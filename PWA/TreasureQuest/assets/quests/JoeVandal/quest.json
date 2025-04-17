@@ -21,7 +21,7 @@
         {
             "type": "timed",
             "directions": "Find an inconspicuous place to wait without drawing any unnecessary attention. Someone will contact you in a few minutes.",
-            "timer": {"minutes": 4, "seconds": 0},
+            "timer": {"minutes": 2, "seconds": 45},
             "alert": "Authorization Code: 8401",
             "button": "Proceed"
         },
@@ -51,7 +51,7 @@
             "directions": "<audio controls><source src=\"assets/quests/JoeVandal/helo-audio.mp3\" type=\"audio/mpeg\">Your browser does not support audio</audio>",
             "note": "Barn",
             "destination": {"coords": {"latitude":46.714613443397965, "longitude":-117.0178550716102}, "proximityMeters": 50},
-            "countdown": {"minutes": 3, "seconds": 30},
+            "countdown": {"minutes": 4, "seconds": 10},
             "button": "OK"
         }
     ]
